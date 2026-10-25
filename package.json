@@ -1,0 +1,38 @@
+{
+  "name": "ethereal-desktop",
+  "productName": "ETHEREAL",
+  "version": "1.0.0",
+  "description": "ETHEREAL // Sleeper Build Protocol Desktop Application",
+  "main": "main.js",
+  "author": "ETHEREAL Team",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist:pack": "electron-packager . ETHEREAL --platform=win32 --arch=x64 --icon=build/icon.ico --out=dist --overwrite --asar",
+    "dist:dir": "electron-builder --win --dir",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.ethereal.sleeperbuild",
+    "productName": "ETHEREAL",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "dir"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "build/**/*"
+    ]
+  },
+  "devDependencies": {
+    "@electron/packager": "^18.3.6",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  }
+}

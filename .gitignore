@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Production build distributions (Heavy ~200MB binaries - distributed via Releases)
+dist/
+
+# Logs & temp
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db

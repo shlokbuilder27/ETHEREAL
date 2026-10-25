@@ -1,0 +1,2636 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETHEREAL // Sleeper Build Protocol</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Orbitron & Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ethereal: {
+              50: '#f4fbf7',
+              100: '#e5f6ee',
+              200: '#cbeddd',
+              300: '#9edec4',
+              400: '#64c6a4',
+              500: '#38a885',
+              600: '#28876c',
+              700: '#226c57',
+              800: '#1e5647',
+              900: '#1a473b',
+              950: '#0a1612',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Air Breeze Subtle Nature Motion */
+    @keyframes airBreeze {
+      0% {
+        transform: scale(1.06) translate(0px, 0px);
+      }
+      35% {
+        transform: scale(1.09) translate(-10px, -6px);
+      }
+      70% {
+        transform: scale(1.07) translate(8px, 4px);
+      }
+      100% {
+        transform: scale(1.06) translate(0px, 0px);
+      }
+    }
+    .animate-breeze {
+      animation: airBreeze 28s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    /* Landing Splash Animation */
+    @keyframes etherealSplash {
+      0% {
+        opacity: 0;
+        transform: scale(0.96);
+        filter: blur(10px);
+      }
+      30% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+      75% {
+        opacity: 1;
+        transform: scale(1.01);
+        filter: blur(0px);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.05);
+        filter: blur(8px);
+        visibility: hidden;
+        pointer-events: none;
+      }
+    }
+
+    .animate-landing-splash {
+      animation: etherealSplash 2.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Pure Liquid Glass (100% Transparent, No Solid Boxes) */
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
+    }
+
+    .liquid-header {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Pure Shapeless Liquid Text Button */
+    .liquid-text-btn {
+      position: relative;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .liquid-text-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      transition: transform 0.6s ease;
+    }
+    .liquid-text-btn:hover::after {
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    .text-glow {
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.6), 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Multi-landscape Background Transitions */
+    .bg-landscape-layer {
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      object-fit: cover;
+      object-position: center;
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease-out;
+      will-change: transform, opacity;
+    }
+
+    /* Ambient Audio HUD Key Pill */
+    .key-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white font-sans min-h-screen flex flex-col antialiased selection:bg-white/20 selection:text-white relative overflow-x-hidden">
+
+  <!-- DYNAMIC NATURE LANDSCAPE BACKDROPS (SCROLL ZOOM + CROSSFADE PER SECTION) -->
+  <div id="landscape-scenery-container" class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <!-- 1. Workout: Alpine Meadow & Peaks -->
+    <img 
+      id="bg-img-tracker"
+      src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2560&q=85" 
+      alt="Alpine Grass & Mountains" 
+      class="bg-landscape-layer opacity-100 filter brightness-[0.70] contrast-[1.08] saturate-[1.12]"
+    />
+    <!-- 2. Radar: Granite Peaks & Mist -->
+    <img 
+      id="bg-img-radar"
+      src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=85" 
+      alt="Granite Mountain Peaks in Mist" 
+      class="bg-landscape-layer opacity-0 filter brightness-[0.62] contrast-[1.12] saturate-[0.95]"
+    />
+    <!-- 3. Calendar: Winter Snow Peaks & Pines -->
+    <img 
+      id="bg-img-calendar"
+      src="https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?auto=format&fit=crop&w=2560&q=85" 
+      alt="Winter Snow Forest" 
+      class="bg-landscape-layer opacity-0 filter brightness-[0.68] contrast-[1.1] saturate-[0.9]"
+    />
+    <!-- 4. Nutrition: Mountain Springs & Flora -->
+    <img 
+      id="bg-img-nutrition"
+      src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=2560&q=85" 
+      alt="High Mountain Spring" 
+      class="bg-landscape-layer opacity-0 filter brightness-[0.65] contrast-[1.1] saturate-[1.15]"
+    />
+    <!-- 5. AI Coach: Starlight Alpine Ridge -->
+    <img 
+      id="bg-img-ai"
+      src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2560&q=85" 
+      alt="Starlight Over Alpine Mountain Ridge" 
+      class="bg-landscape-layer opacity-0 filter brightness-[0.65] contrast-[1.15] saturate-[1.0]"
+    />
+    <!-- 6. Profile YOU: Golden Hour Alpine Summit -->
+    <img 
+      id="bg-img-profile"
+      src="https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=2560&q=85" 
+      alt="Golden Hour Mountain Summit" 
+      class="bg-landscape-layer opacity-0 filter brightness-[0.65] contrast-[1.1] saturate-[1.1]"
+    />
+    <!-- 7. Focus: Misty Mountain Pine Forest & Rain Clouds -->
+    <img 
+      id="bg-img-focus"
+      src="https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=2560&q=85" 
+      alt="Misty Mountain Forest Rain Clouds" 
+      class="bg-landscape-layer opacity-0 filter brightness-[0.60] contrast-[1.12] saturate-[0.9]"
+    />
+    <!-- Atmospheric Ambient Gradient -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/55"></div>
+  </div>
+
+  <!-- CURSOR BREEZE CANVAS (ETHREAL FLOATING AIR DRIFT) -->
+  <canvas id="breeze-canvas" class="fixed inset-0 z-20 pointer-events-none w-full h-full"></canvas>
+
+  <!-- LANDING PAGE INTRO ANIMATION: FADE IN & FADE OUT -->
+  <div id="landing-splash-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/85 backdrop-blur-2xl animate-landing-splash cursor-pointer" onclick="dismissSplash()">
+    <div class="flex flex-col items-center justify-center space-y-4 text-center px-6">
+      <div class="flex flex-col items-center gap-1.5 opacity-80">
+        <span class="w-14 h-0.5 bg-white/70 rounded-full shadow-[0_0_12px_#ffffff]"></span>
+        <span class="w-8 h-0.5 bg-white/40 rounded-full"></span>
+        <span class="w-12 h-0.5 bg-white/70 rounded-full shadow-[0_0_12px_#ffffff]"></span>
+      </div>
+      <h1 class="font-orbitron text-5xl sm:text-7xl font-light tracking-[0.5em] text-white drop-shadow-[0_0_35px_rgba(255,255,255,0.7)] ml-4">
+        ETHEREAL
+      </h1>
+      <p class="font-orbitron text-xs tracking-[0.35em] text-white/70 uppercase">
+        Winter Sleeper Protocol
+      </p>
+    </div>
+  </div>
+
+  <!-- TOP LEFT: DAY COUNTER INSTEAD OF RIVER STREAM BUTTON + AMBIENT SOUND HUD -->
+  <div class="fixed top-5 left-5 z-40 flex flex-col gap-2">
+    <!-- Day 01 of 112 Badge -->
+    <div class="px-4 py-2 rounded-full liquid-header flex items-center gap-3 shadow-2xl backdrop-blur-md border border-white/20">
+      <span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_#ffffff] animate-pulse"></span>
+      <span id="top-day-badge" class="font-orbitron text-[11px] font-normal tracking-[0.25em] text-white">DAY 01 OF 112</span>
+      <div class="flex items-center gap-1 pl-1 border-l border-white/15">
+        <button onclick="prevDay()" class="text-white/50 hover:text-white transition p-0.5 text-xs font-mono" title="Previous Day">‹</button>
+        <button onclick="nextDay()" class="text-white/50 hover:text-white transition p-0.5 text-xs font-mono" title="Next Day">›</button>
+      </div>
+    </div>
+
+    <!-- Ambient Audio Shortcut Controls Indicator -->
+    <div class="px-3 py-1.5 rounded-2xl liquid-glass flex items-center gap-2 text-[10px] font-orbitron text-white/70 backdrop-blur-md">
+      <span id="ambient-current-icon" class="text-xs">≋</span>
+      <span id="ambient-current-label" class="tracking-wider text-[9px] uppercase">RIVER (ON)</span>
+      <div class="hidden sm:flex items-center gap-1.5 pl-2 border-l border-white/15 text-[8px] font-mono text-white/50">
+        <button onclick="triggerAmbientSound('river')" class="hover:text-white"><span class="key-badge">R</span> River</button>
+        <button onclick="triggerAmbientSound('wind')" class="hover:text-white"><span class="key-badge">W</span> Wind</button>
+        <button onclick="triggerAmbientSound('rain')" class="hover:text-white"><span class="key-badge">F</span> Rain</button>
+        <button onclick="triggerAmbientSound('fire')" class="hover:text-white"><span class="key-badge">B</span> Fire</button>
+        <button onclick="toggleAmbientMaster()" class="hover:text-white"><span class="key-badge">M</span> Mute</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- THREE-BAR TRIGGER BUTTON (RELOCATED TO TOP-RIGHT, PURE LIQUID GLASS) -->
+  <button 
+    id="three-bar-trigger" 
+    onclick="toggleNavDrawer()" 
+    class="fixed top-5 right-5 z-40 p-3.5 rounded-2xl liquid-header hover:bg-white/10 transition-all flex flex-col justify-center items-center gap-1.5 w-12 h-12 shadow-2xl group cursor-pointer"
+    aria-label="Navigation"
+  >
+    <span class="w-5 h-0.5 bg-white rounded-full transition-all group-hover:w-6 shadow-[0_0_8px_#ffffff]"></span>
+    <span class="w-5 h-0.5 bg-white/60 rounded-full transition-all group-hover:w-4"></span>
+    <span class="w-5 h-0.5 bg-white rounded-full transition-all group-hover:w-6 shadow-[0_0_8px_#ffffff]"></span>
+  </button>
+
+  <!-- SLIDE-OVER NAVIGATION DRAWER (SLIDES FROM THE RIGHT SIDE) -->
+  <div id="nav-drawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-lg opacity-0 pointer-events-none transition-all duration-300 flex justify-end">
+    <div class="w-full max-w-xs h-full liquid-glass border-l border-white/15 p-8 flex flex-col justify-between overflow-y-auto transform translate-x-full transition-all duration-300" id="nav-drawer-content">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10">
+          <span class="font-orbitron font-light text-xs tracking-[0.25em] text-white">PROTOCOL INDEX</span>
+          <button onclick="toggleNavDrawer()" class="text-white/60 hover:text-white p-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <nav class="space-y-2 font-orbitron text-xs">
+          <button onclick="switchTab('tracker')" id="nav-item-tracker" class="w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-white/30 bg-white/10 text-white">
+            <span class="tracking-wider">WORKOUT</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]"></span>
+          </button>
+          <button onclick="switchTab('focus')" id="nav-item-focus" class="w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-transparent hover:border-white/15 text-white/70 hover:text-white">
+            <span class="tracking-wider">FOCUS</span>
+          </button>
+          <button onclick="switchTab('radar')" id="nav-item-radar" class="w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-transparent hover:border-white/15 text-white/70 hover:text-white">
+            <span class="tracking-wider">RADAR MATRIX</span>
+          </button>
+          <button onclick="switchTab('calendar')" id="nav-item-calendar" class="w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-transparent hover:border-white/15 text-white/70 hover:text-white">
+            <span class="tracking-wider">CALENDAR</span>
+          </button>
+          <button onclick="switchTab('nutrition')" id="nav-item-nutrition" class="w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-transparent hover:border-white/15 text-white/70 hover:text-white">
+            <span class="tracking-wider">NUTRITION</span>
+          </button>
+          <button onclick="switchTab('ai')" id="nav-item-ai" class="w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-transparent hover:border-white/15 text-white/70 hover:text-white">
+            <span class="tracking-wider">AI COACH</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- YOU (PROFILE SECTION AT THE BOTTOM OF THREE-BAR DRAWER) -->
+      <div class="pt-6 border-t border-white/10 space-y-3">
+        <button onclick="switchTab('profile')" id="nav-item-profile" class="w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-transparent hover:border-white/20 bg-white/[0.04] text-white">
+          <div class="flex items-center gap-3">
+            <div id="drawer-pfp-avatar" class="w-8 h-8 rounded-full bg-white/15 border border-white/25 overflow-hidden flex items-center justify-center font-orbitron text-xs">
+              Y
+            </div>
+            <div>
+              <span class="tracking-widest font-orbitron text-xs block text-white font-medium" id="drawer-username-label">YOU</span>
+              <span class="text-[9px] font-mono text-white/50 block">PROFILE & DATA</span>
+            </div>
+          </div>
+          <span class="text-white/40 text-xs">→</span>
+        </button>
+
+        <div class="text-center font-mono text-[9px] text-white/40 tracking-widest uppercase pt-2">
+          Winter Cycle // Nov - Feb
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXCLUSIVE HEADER: ONLY "ETHEREAL" IN MIDDLE GLASSMORPHED NOTHING ELSE -->
+  <header class="sticky top-5 z-30 max-w-xl mx-auto px-4 w-full flex justify-center pointer-events-auto">
+    <div class="px-10 py-2.5 rounded-full liquid-header text-center transition-all duration-300 group hover:border-white/40">
+      <h1 class="font-orbitron font-light text-xl tracking-[0.45em] text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.6)] select-none ml-2">
+        ETHEREAL
+      </h1>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT CONTAINER WITH MAXIMUM AIR & MOUNTAIN VISIBILITY -->
+  <main class="relative z-10 max-w-4xl mx-auto px-4 sm:px-8 py-8 space-y-8 flex-1 w-full">
+
+    <!-- =========================================================================
+         VIEW 1: TODAY'S WORKOUT PROTOCOL (INTERACTIVE STEP-BY-STEP RUNNER)
+         ========================================================================= -->
+    <section id="view-tracker" class="space-y-8">
+
+      <!-- Centered, Smaller Sized Title as Requested -->
+      <div class="text-center space-y-1.5 py-2">
+        <h2 class="text-base sm:text-xl font-orbitron font-normal text-white/90 tracking-[0.25em] text-glow uppercase" id="active-day-title">
+          Phase 1, Day 1: Upper Eccentric
+        </h2>
+        <div class="flex items-center justify-center gap-1.5 opacity-60">
+          <span class="w-8 h-0.5 bg-white/40 rounded-full"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>
+          <span class="w-8 h-0.5 bg-white/40 rounded-full"></span>
+        </div>
+      </div>
+
+      <!-- WORKOUT STATE 1: PURE LIQUID START TRIGGER (NO BOXES, NO CHECKLIST, PURE TEXT) -->
+      <div id="workout-prelaunch-card" class="py-16 flex flex-col items-center justify-center text-center space-y-6">
+        <button 
+          onclick="startInteractiveWorkout()" 
+          class="liquid-text-btn font-orbitron font-light text-2xl sm:text-4xl tracking-[0.35em] text-white hover:text-white/80 drop-shadow-[0_0_25px_rgba(255,255,255,0.7)] group flex flex-col items-center gap-3"
+        >
+          <span>START WORKOUT</span>
+          <span class="w-2 h-2 rounded-full bg-white/80 group-hover:scale-150 transition-transform shadow-[0_0_12px_#ffffff]"></span>
+        </button>
+      </div>
+
+      <!-- WORKOUT STATE 2: INTERACTIVE GUIDED STEP-BY-STEP RUNNER -->
+      <div id="workout-active-runner" class="hidden space-y-6">
+
+        <!-- Active Exercise & Set Display -->
+        <div class="liquid-glass rounded-3xl p-8 space-y-6">
+          <div class="flex items-center justify-between text-xs font-orbitron pb-4 border-b border-white/10">
+            <span class="text-white/70 tracking-wider" id="runner-step-indicator">EXERCISE 1 OF 5 · SET 1 OF 4</span>
+            <span class="text-white/50 font-mono" id="runner-total-progress">0% Completed</span>
+          </div>
+
+          <!-- Movement Title & Cue -->
+          <div class="space-y-2 text-center py-2">
+            <h3 class="text-2xl sm:text-3xl font-orbitron font-normal text-white text-glow" id="runner-ex-title">Pull-Up Eccentric Negatives</h3>
+            <p class="text-xs font-orbitron text-white/70" id="runner-ex-target">Lats, Scapular Depressors, Biceps</p>
+            <p class="text-xs text-white/60 max-w-lg mx-auto pt-1 leading-relaxed" id="runner-ex-cue">Jump to chin over bar. Pause 1s. Strict 4-second descent into dead hang.</p>
+          </div>
+
+          <!-- Centered Glowing Interactive Circle (Tap to Tick & Advance) -->
+          <div class="flex flex-col items-center justify-center py-6">
+            <button 
+              id="runner-tick-circle" 
+              onclick="tickCurrentSet()" 
+              class="w-32 h-32 rounded-full border border-white/30 bg-white/[0.04] hover:bg-white/[0.12] text-white flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.2)] group cursor-pointer backdrop-blur-md"
+            >
+              <svg class="w-10 h-10 text-white/80 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="font-orbitron text-[10px] tracking-widest text-white/70 mt-1 uppercase">TAP DONE</span>
+            </button>
+            <span class="font-mono text-xs text-white/50 mt-3" id="runner-set-target-reps">Target: 3 Reps (4s Tempo)</span>
+          </div>
+
+          <!-- Set Navigation Footer -->
+          <div class="flex items-center justify-between pt-4 border-t border-white/10 text-xs font-orbitron">
+            <button onclick="runnerPrevStep()" class="text-white/60 hover:text-white transition flex items-center gap-1">
+              <span>← Prev Set</span>
+            </button>
+            <button onclick="exitWorkoutRunner()" class="text-white/40 hover:text-white underline font-mono text-[11px]">
+              Overview Mode
+            </button>
+            <button onclick="runnerNextStep()" class="text-white/80 hover:text-white transition flex items-center gap-1">
+              <span>Skip / Next →</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- INTEGRATED AUDIO METRONOME & REST TIMER -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- 4-Second Eccentric Metronome -->
+          <div class="liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-white/10">
+              <span class="font-orbitron text-xs font-light text-white tracking-wider">4s Tempo Metronome</span>
+              <span class="text-[9px] font-mono text-white/60 bg-white/10 px-2 py-0.5 rounded border border-white/15">Web Audio</span>
+            </div>
+
+            <!-- Beats -->
+            <div class="flex items-center justify-center gap-3 py-1">
+              <div id="metro-beat-1" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xs font-orbitron text-white/50 transition-all">1</div>
+              <div id="metro-beat-2" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xs font-orbitron text-white/50 transition-all">2</div>
+              <div id="metro-beat-3" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xs font-orbitron text-white/50 transition-all">3</div>
+              <div id="metro-beat-4" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xs font-orbitron text-white/50 transition-all">4</div>
+            </div>
+
+            <button id="metro-btn-toggle" onclick="toggleMetronome()" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white font-orbitron text-xs rounded-xl transition border border-white/20 flex items-center justify-center gap-2 tracking-wider">
+              <span id="metro-label">Start 4s Beats</span>
+            </button>
+          </div>
+
+          <!-- Set Rest Interval Timer -->
+          <div class="liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-white/10">
+              <span class="font-orbitron text-xs font-light text-white tracking-wider">Rest Timer</span>
+              <div class="flex items-center gap-1.5 font-mono text-[10px]">
+                <button onclick="setTimerDuration(60)" class="px-2 py-0.5 rounded bg-white/5 hover:bg-white/15 text-white/70">60s</button>
+                <button onclick="setTimerDuration(90)" class="px-2 py-0.5 rounded bg-white/15 text-white border border-white/20">90s</button>
+                <button onclick="setTimerDuration(120)" class="px-2 py-0.5 rounded bg-white/5 hover:bg-white/15 text-white/70">120s</button>
+              </div>
+            </div>
+
+            <div class="text-center py-1">
+              <div id="timer-display" class="font-orbitron text-4xl font-light tracking-widest text-white text-glow">01:30</div>
+              <span id="timer-status" class="text-[9px] font-mono text-white/40 uppercase tracking-widest block mt-1">Awaiting Trigger</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button id="timer-btn-start" onclick="toggleTimer()" class="flex-1 py-2.5 bg-white/10 hover:bg-white/20 text-white font-orbitron text-xs rounded-xl transition border border-white/20 flex items-center justify-center gap-2">
+                <span id="timer-btn-label">Start Rest (90s)</span>
+              </button>
+              <button onclick="resetTimer()" class="px-3 py-2.5 bg-white/5 hover:bg-white/10 text-white/60 font-mono text-xs rounded-xl border border-white/10">
+                ↺
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- WORKOUT STATE 3: CELEBRATION & COMPLETED VIEW -->
+      <div id="workout-completed-card" class="hidden liquid-glass rounded-3xl p-8 sm:p-10 text-center space-y-6">
+        <div class="w-16 h-16 rounded-full bg-white/10 border border-white/30 text-white flex items-center justify-center mx-auto shadow-[0_0_25px_rgba(255,255,255,0.4)]">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="text-2xl font-orbitron font-light text-white text-glow">Session Completed</h3>
+          <p class="text-xs font-orbitron text-white/70">All sets locked in. Radar metrics & calendar updated.</p>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 pt-2">
+          <button onclick="advanceToNextDaySession()" class="px-6 py-3 bg-white/15 hover:bg-white/25 border border-white/30 text-white font-orbitron text-xs rounded-xl transition shadow tracking-wider">
+            Advance to Next Day →
+          </button>
+          <button onclick="resetCurrentDaySession()" class="px-5 py-3 liquid-glass hover:bg-white/10 text-white/70 font-orbitron text-xs rounded-xl transition">
+            Redo Workout
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =========================================================================
+         VIEW 1.5: FOCUS TIMER (UP TO 2 HOURS, SEC/MIN/HR TOGGLES, RAIN ARRIVAL)
+         ========================================================================= -->
+    <section id="view-focus" class="hidden space-y-8">
+      
+      <!-- Minimalist Focus Header -->
+      <div class="text-center space-y-1.5 py-2">
+        <h2 class="text-base sm:text-xl font-orbitron font-normal text-white/90 tracking-[0.25em] text-glow uppercase">
+          FOCUS SANCTUARY
+        </h2>
+        <div class="flex items-center justify-center gap-1.5 opacity-60">
+          <span class="w-8 h-0.5 bg-white/40 rounded-full"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>
+          <span class="w-8 h-0.5 bg-white/40 rounded-full"></span>
+        </div>
+        <p class="text-[11px] font-mono text-white/50 tracking-widest pt-1">IMMERSION PROTOCOL // MAX 02:00:00</p>
+      </div>
+
+      <!-- MAIN TRANSPARENT WHITE LETTER COUNTDOWN DISPLAY -->
+      <div class="py-8 flex flex-col items-center justify-center text-center space-y-6">
+        
+        <!-- Big Pure Transparent White Glowing Letters -->
+        <div class="relative py-4 select-none">
+          <div id="focus-countdown-display" class="font-orbitron font-extralight text-5xl sm:text-7xl md:text-8xl tracking-[0.22em] text-white/95 text-glow transition-all">
+            00:45:00
+          </div>
+          <!-- Label Indicators below digits -->
+          <div class="flex justify-between max-w-sm mx-auto px-4 pt-3 font-mono text-[9px] sm:text-[10px] tracking-[0.3em] text-white/40 uppercase">
+            <span>HOURS</span>
+            <span>MINUTES</span>
+            <span>SECONDS</span>
+          </div>
+        </div>
+
+        <!-- Rain Arrival Alert Banner (Revealed when timer ends) -->
+        <div id="focus-rain-alert" class="hidden w-full max-w-md liquid-glass rounded-3xl p-6 text-center space-y-3 border border-white/30 backdrop-blur-xl animate-pulse">
+          <div class="text-3xl">☔</div>
+          <div class="space-y-1">
+            <h3 class="font-orbitron text-sm tracking-[0.2em] text-white">FOCUS COMPLETE · RAIN HAS BEGUN</h3>
+            <p class="text-xs font-mono text-white/60">Mountain rain sound & mist are now descending over the valley.</p>
+          </div>
+          <div class="flex items-center justify-center gap-3 pt-2">
+            <button onclick="stopFocusRain()" class="px-4 py-2 rounded-xl liquid-glass hover:bg-white/15 text-white/80 font-orbitron text-[10px] transition border border-white/20">
+              Stop Rain Flow
+            </button>
+            <button onclick="resetFocusTimer()" class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-orbitron text-[10px] transition border border-white/30">
+              Reset Session
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTROLS: ADJUST SECONDS, MINUTES, HOURS -->
+        <div id="focus-settings-controls" class="w-full max-w-lg space-y-5 pt-2">
+          
+          <!-- Steppers for Hours, Minutes, Seconds -->
+          <div class="grid grid-cols-3 gap-3">
+            
+            <!-- Hours Stepper (0 to 2) -->
+            <div class="liquid-glass rounded-2xl p-3 flex flex-col items-center gap-2">
+              <span class="font-mono text-[9px] text-white/50 tracking-wider">HOURS</span>
+              <div class="flex items-center justify-between w-full px-2">
+                <button onclick="adjustFocusUnit('h', -1)" class="w-8 h-8 rounded-full liquid-glass hover:bg-white/20 flex items-center justify-center text-sm font-mono text-white transition active:scale-95">−</button>
+                <span id="focus-val-hours" class="font-orbitron text-base text-white font-light">00</span>
+                <button onclick="adjustFocusUnit('h', 1)" class="w-8 h-8 rounded-full liquid-glass hover:bg-white/20 flex items-center justify-center text-sm font-mono text-white transition active:scale-95">+</button>
+              </div>
+            </div>
+
+            <!-- Minutes Stepper (0 to 59) -->
+            <div class="liquid-glass rounded-2xl p-3 flex flex-col items-center gap-2">
+              <span class="font-mono text-[9px] text-white/50 tracking-wider">MINUTES</span>
+              <div class="flex items-center justify-between w-full px-2">
+                <button onclick="adjustFocusUnit('m', -5)" class="w-8 h-8 rounded-full liquid-glass hover:bg-white/20 flex items-center justify-center text-sm font-mono text-white transition active:scale-95">−</button>
+                <span id="focus-val-minutes" class="font-orbitron text-base text-white font-light">45</span>
+                <button onclick="adjustFocusUnit('m', 5)" class="w-8 h-8 rounded-full liquid-glass hover:bg-white/20 flex items-center justify-center text-sm font-mono text-white transition active:scale-95">+</button>
+              </div>
+            </div>
+
+            <!-- Seconds Stepper (0 to 59) -->
+            <div class="liquid-glass rounded-2xl p-3 flex flex-col items-center gap-2">
+              <span class="font-mono text-[9px] text-white/50 tracking-wider">SECONDS</span>
+              <div class="flex items-center justify-between w-full px-2">
+                <button onclick="adjustFocusUnit('s', -10)" class="w-8 h-8 rounded-full liquid-glass hover:bg-white/20 flex items-center justify-center text-sm font-mono text-white transition active:scale-95">−</button>
+                <span id="focus-val-seconds" class="font-orbitron text-base text-white font-light">00</span>
+                <button onclick="adjustFocusUnit('s', 10)" class="w-8 h-8 rounded-full liquid-glass hover:bg-white/20 flex items-center justify-center text-sm font-mono text-white transition active:scale-95">+</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="flex items-center justify-center gap-2 flex-wrap text-[10px] font-orbitron">
+            <button onclick="setFocusPreset(0, 15, 0)" class="px-3 py-1.5 rounded-xl liquid-glass hover:bg-white/15 text-white/70 hover:text-white transition">15M</button>
+            <button onclick="setFocusPreset(0, 25, 0)" class="px-3 py-1.5 rounded-xl liquid-glass hover:bg-white/15 text-white/70 hover:text-white transition">25M</button>
+            <button onclick="setFocusPreset(0, 45, 0)" class="px-3 py-1.5 rounded-xl bg-white/15 border border-white/25 text-white transition">45M</button>
+            <button onclick="setFocusPreset(1, 0, 0)" class="px-3 py-1.5 rounded-xl liquid-glass hover:bg-white/15 text-white/70 hover:text-white transition">1 HR</button>
+            <button onclick="setFocusPreset(1, 30, 0)" class="px-3 py-1.5 rounded-xl liquid-glass hover:bg-white/15 text-white/70 hover:text-white transition">1.5 HR</button>
+            <button onclick="setFocusPreset(2, 0, 0)" class="px-3 py-1.5 rounded-xl liquid-glass hover:bg-white/15 text-white/70 hover:text-white transition">2 HRS MAX</button>
+          </div>
+
+        </div>
+
+        <!-- ACTION BUTTONS: PURE SHAPELESS LIQUID TRIGGER -->
+        <div class="flex items-center justify-center gap-8 pt-4">
+          <button 
+            id="focus-main-btn" 
+            onclick="toggleFocusTimer()" 
+            class="liquid-text-btn font-orbitron font-light text-xl sm:text-2xl tracking-[0.3em] text-white hover:text-white/80 drop-shadow-[0_0_25px_rgba(255,255,255,0.7)] group flex items-center gap-3"
+          >
+            <span id="focus-btn-label">START FOCUS</span>
+            <span class="w-2 h-2 rounded-full bg-white/80 group-hover:scale-150 transition-transform shadow-[0_0_12px_#ffffff]"></span>
+          </button>
+
+          <button 
+            onclick="resetFocusTimer()" 
+            class="liquid-glass hover:bg-white/15 px-4 py-2 rounded-xl text-white/60 hover:text-white font-mono text-xs transition border border-white/10"
+            title="Reset Timer"
+          >
+            RESET
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =========================================================================
+         VIEW 2: BIOMECHANICAL RADAR (CURRENT VS IDEAL)
+         ========================================================================= -->
+    <section id="view-radar" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-orbitron font-light text-white text-glow">CURRENT VS. IDEAL RADAR</h2>
+        <div class="flex items-center gap-4 text-[10px] font-orbitron">
+          <span class="flex items-center gap-1.5 text-white">
+            <span class="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]"></span> Current
+          </span>
+          <span class="flex items-center gap-1.5 text-white/40">
+            <span class="w-2.5 h-2.5 rounded-full bg-white/20"></span> Goal
+          </span>
+        </div>
+      </div>
+
+      <div class="liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+          <div class="w-full max-w-sm aspect-square relative flex items-center justify-center">
+            <svg id="radar-svg" viewBox="0 0 400 400" class="w-full h-full max-w-[340px] overflow-visible">
+              <!-- Radar geometry rendered via JS -->
+            </svg>
+          </div>
+
+          <div class="w-full lg:w-1/2 space-y-3" id="radar-metrics-editor">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 3: WINTER PERIODIZATION CALENDAR (NOV - FEB)
+         ========================================================================= -->
+    <section id="view-calendar" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-orbitron font-light text-white text-glow">WINTER MACROCYCLE</h2>
+        
+        <!-- Month Tabs -->
+        <div class="flex items-center gap-1.5 p-1 rounded-xl liquid-glass font-orbitron text-xs">
+          <button onclick="switchMonth('nov')" id="month-btn-nov" class="px-3 py-1.5 rounded-lg bg-white/20 text-white font-medium transition">NOV</button>
+          <button onclick="switchMonth('dec')" id="month-btn-dec" class="px-3 py-1.5 rounded-lg text-white/50 hover:text-white transition">DEC</button>
+          <button onclick="switchMonth('jan')" id="month-btn-jan" class="px-3 py-1.5 rounded-lg text-white/50 hover:text-white transition">JAN</button>
+          <button onclick="switchMonth('feb')" id="month-btn-feb" class="px-3 py-1.5 rounded-lg text-white/50 hover:text-white transition">FEB</button>
+        </div>
+      </div>
+
+      <div class="liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
+        <div class="flex items-center justify-between text-xs font-orbitron pb-3 border-b border-white/10">
+          <span id="cal-phase-badge" class="text-white/70">Phase 1 (Weeks 1 - 4)</span>
+          <span id="cal-phase-title" class="text-white/50">Neural Priming & Tendon Prep</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <div class="min-w-[580px]">
+            <div class="grid grid-cols-7 gap-2.5 text-center text-[10px] font-orbitron uppercase text-white/40 pb-2">
+              <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+            </div>
+            <div id="calendar-grid" class="grid grid-cols-7 gap-2.5">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 4: NUTRITION & VISION OCR (WITH TOGGLE & RESET BUTTONS)
+         ========================================================================= -->
+    <section id="view-nutrition" class="hidden space-y-6">
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <h2 class="text-2xl font-orbitron font-light text-white text-glow">NUTRITION & MACROS</h2>
+        
+        <!-- Toggle & Reset Controls -->
+        <div class="flex items-center gap-2">
+          <button onclick="toggleNutritionInputMode()" id="nutrition-toggle-btn" class="px-3.5 py-2 rounded-xl liquid-glass hover:bg-white/15 text-white/80 font-orbitron text-xs transition border border-white/20 flex items-center gap-2">
+            <span id="toggle-icon">📷</span>
+            <span id="toggle-label">Quick Log Mode</span>
+          </button>
+          <button onclick="resetNutritionLog()" class="px-3.5 py-2 rounded-xl liquid-glass hover:bg-white/15 text-white/60 hover:text-white font-orbitron text-xs transition border border-white/10" title="Reset Today's Nutrition">
+            Reset Log
+          </button>
+        </div>
+      </div>
+
+      <!-- Macro Gauges (Floating Liquid Glass) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="liquid-glass p-4 rounded-2xl space-y-2">
+          <div class="flex justify-between items-baseline text-xs font-orbitron">
+            <span class="text-white/50">CALORIES</span>
+            <span id="stat-cals" class="text-white font-bold">0 / 2400</span>
+          </div>
+          <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+            <div id="bar-cals" class="h-full bg-white transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="liquid-glass p-4 rounded-2xl space-y-2">
+          <div class="flex justify-between items-baseline text-xs font-orbitron">
+            <span class="text-white/80">PROTEIN</span>
+            <span id="stat-pro" class="text-white font-bold">0 / 140g</span>
+          </div>
+          <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+            <div id="bar-pro" class="h-full bg-white/80 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="liquid-glass p-4 rounded-2xl space-y-2">
+          <div class="flex justify-between items-baseline text-xs font-orbitron">
+            <span class="text-white/50">CARBS</span>
+            <span id="stat-carb" class="text-white/70 font-bold">0 / 280g</span>
+          </div>
+          <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+            <div id="bar-carb" class="h-full bg-white/40 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="liquid-glass p-4 rounded-2xl space-y-2">
+          <div class="flex justify-between items-baseline text-xs font-orbitron">
+            <span class="text-white/50">FATS</span>
+            <span id="stat-fat" class="text-white/70 font-bold">0 / 65g</span>
+          </div>
+          <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+            <div id="bar-fat" class="h-full bg-white/40 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL A: GEMINI MULTIMODAL OCR SCANNER -->
+      <div id="panel-ocr-scan" class="liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <span class="font-orbitron text-xs font-light text-white">Gemini Vision OCR Scanner</span>
+          <span class="text-[9px] font-mono text-white/60 bg-white/10 px-2 py-0.5 rounded border border-white/15">gemini-3-flash</span>
+        </div>
+
+        <div onclick="document.getElementById('food-img-input').click()" class="cursor-pointer border-2 border-dashed border-white/15 hover:border-white/40 rounded-2xl p-6 text-center transition flex flex-col items-center justify-center gap-2 group min-h-[140px]">
+          <input type="file" id="food-img-input" accept="image/*" class="hidden" onchange="handleFoodImageSelect(event)">
+          <div id="upload-prompt-view" class="space-y-1">
+            <p class="text-xs font-orbitron text-white">Upload Meal Photo or Nutrition Label</p>
+            <p class="text-[10px] font-mono text-white/40">Tap to browse image</p>
+          </div>
+          <div id="upload-preview-view" class="hidden flex flex-col items-center gap-2">
+            <img id="food-img-preview" src="" alt="Selected Meal" class="max-h-36 rounded-xl object-contain border border-white/15">
+            <span class="text-[10px] font-mono text-white/80 underline">Change Photo</span>
+          </div>
+        </div>
+
+        <input type="text" id="food-desc-input" placeholder="Meal description (e.g. 2 rotis, bowl of dal, 150g curd, 3 eggs)..." class="w-full bg-black/30 border border-white/15 rounded-xl px-4 py-3 text-xs text-white placeholder-white/40 focus:outline-none focus:border-white/50 transition">
+
+        <button id="scan-submit-btn" onclick="scanMealWithGemini()" class="w-full py-3 bg-white/15 hover:bg-white/25 text-white font-orbitron text-xs rounded-xl transition border border-white/25 flex items-center justify-center gap-2 tracking-wider">
+          <span>Scan with Gemini Vision</span>
+        </button>
+
+        <!-- Result Box (Hidden until scanned) -->
+        <div id="scan-result-card" class="hidden pt-4 border-t border-white/10 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 id="res-meal-name" class="font-orbitron font-normal text-white text-sm">Meal</h4>
+              <p id="res-sleeper-rating" class="text-xs font-mono text-white/70">Score: 9.0/10</p>
+            </div>
+            <div class="text-right">
+              <span id="res-cals" class="text-lg font-orbitron font-normal text-white">450</span>
+              <span class="text-[9px] font-mono text-white/40 block">KCAL</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-center text-xs font-orbitron">
+            <div class="p-2 rounded-xl bg-white/5 border border-white/10">
+              <span class="text-[9px] text-white/60 block">PROTEIN</span>
+              <span id="res-protein" class="font-bold text-white">28g</span>
+            </div>
+            <div class="p-2 rounded-xl bg-white/5 border border-white/10">
+              <span class="text-[9px] text-white/60 block">CARBS</span>
+              <span id="res-carbs" class="font-bold text-white">55g</span>
+            </div>
+            <div class="p-2 rounded-xl bg-white/5 border border-white/10">
+              <span class="text-[9px] text-white/60 block">FATS</span>
+              <span id="res-fats" class="font-bold text-white">12g</span>
+            </div>
+          </div>
+
+          <p id="res-verdict" class="text-xs text-white/70 italic"></p>
+
+          <button onclick="addScannedMealToDailyLog()" class="w-full py-2.5 bg-white/15 hover:bg-white/25 text-white font-orbitron text-xs rounded-xl transition border border-white/20">
+            + Add to Daily Fuel Log
+          </button>
+        </div>
+      </div>
+
+      <!-- PANEL B: QUICK MANUAL MACRO LOG (Toggled) -->
+      <div id="panel-manual-log" class="hidden liquid-glass rounded-3xl p-6 sm:p-8 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <span class="font-orbitron text-xs font-light text-white">Manual Quick Entry</span>
+          <span class="text-[9px] font-mono text-white/40">Direct Log</span>
+        </div>
+
+        <input type="text" id="manual-name-input" placeholder="Food item name..." class="w-full bg-black/30 border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-white/50">
+        
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <input type="number" id="manual-cals-input" placeholder="Calories (kcal)" class="bg-black/30 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-white/50">
+          <input type="number" id="manual-pro-input" placeholder="Protein (g)" class="bg-black/30 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-white/50">
+          <input type="number" id="manual-carb-input" placeholder="Carbs (g)" class="bg-black/30 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-white/50">
+          <input type="number" id="manual-fat-input" placeholder="Fats (g)" class="bg-black/30 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-white/50">
+        </div>
+
+        <button onclick="addManualMeal()" class="w-full py-2.5 bg-white/15 hover:bg-white/25 text-white font-orbitron text-xs rounded-xl transition border border-white/20">
+          Log Meal
+        </button>
+      </div>
+
+      <!-- Logged Food History -->
+      <div id="meals-history-list" class="space-y-3">
+        <!-- Populated via JS -->
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 5: AI COACH AUDIT
+         ========================================================================= -->
+    <section id="view-ai" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-orbitron font-light text-white text-glow">AI COACH TERMINAL</h2>
+        <button onclick="clearAIChat()" class="text-xs font-mono text-white/50 hover:text-white underline">Clear</button>
+      </div>
+
+      <div class="liquid-glass rounded-3xl flex flex-col h-[650px] overflow-hidden">
+        <!-- Messages -->
+        <div id="ai-chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 text-xs sm:text-sm">
+          <!-- Populated via JS -->
+        </div>
+
+        <!-- Quick Prompts Strip -->
+        <div class="px-6 py-2.5 border-t border-white/10 bg-black/20 flex items-center gap-2 overflow-x-auto no-scrollbar font-orbitron text-[10px]">
+          <button onclick="askQuickPrompt('Review my eccentric pull-up negative volume and recommend recovery adjustments.')" class="whitespace-nowrap px-3 py-1 rounded-full liquid-glass hover:bg-white/10 text-white/80">
+            Pull-up Recovery
+          </button>
+          <button onclick="askQuickPrompt('Audit my logged macros against my sleeper build target (140g protein, 2400 kcal).')" class="whitespace-nowrap px-3 py-1 rounded-full liquid-glass hover:bg-white/10 text-white/80">
+            Macro Audit
+          </button>
+          <button onclick="askQuickPrompt('How do I progress my feet-elevated pike push-ups toward handstand pressing?')" class="whitespace-nowrap px-3 py-1 rounded-full liquid-glass hover:bg-white/10 text-white/80">
+            Shoulder Progression
+          </button>
+        </div>
+
+        <!-- Input -->
+        <div class="p-4 border-t border-white/10 bg-black/30 flex items-center gap-2">
+          <input type="text" id="ai-user-input" onkeydown="if(event.key==='Enter') sendChatMessage()" placeholder="Ask your ETHEREAL coach about tempo, form, or fuel..." class="flex-1 bg-black/30 border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-white/50">
+          <button id="ai-send-btn" onclick="sendChatMessage()" class="px-5 py-2.5 bg-white/15 hover:bg-white/25 text-white font-orbitron text-xs rounded-xl transition border border-white/25">
+            Send
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 6: "YOU" PROFILE SECTION (CUSTOM USERNAME, PFP, BIO, & PERSONAL DATA)
+         ========================================================================= -->
+    <section id="view-profile" class="hidden space-y-8">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-orbitron font-light text-white text-glow">YOU // PROFILE</h2>
+        <button onclick="saveUserProfile()" class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-orbitron text-xs transition border border-white/30 tracking-wider">
+          Save Profile
+        </button>
+      </div>
+
+      <!-- Profile Header & Avatar Card -->
+      <div class="liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <!-- Profile Picture Display & Trigger -->
+          <div class="relative group cursor-pointer" onclick="document.getElementById('pfp-file-input').click()">
+            <div id="user-pfp-avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-white/30 bg-black/40 overflow-hidden flex items-center justify-center shadow-[0_0_25px_rgba(255,255,255,0.2)]">
+              <span class="font-orbitron text-3xl font-light text-white/70" id="avatar-fallback-initial">E</span>
+            </div>
+            <div class="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center font-orbitron text-[9px] tracking-wider text-white">
+              CHANGE
+            </div>
+            <input type="file" id="pfp-file-input" accept="image/*" class="hidden" onchange="handlePfpUpload(event)">
+          </div>
+
+          <!-- Name & Bio Form -->
+          <div class="flex-1 space-y-3 w-full">
+            <div>
+              <label class="block font-mono text-[10px] text-white/50 uppercase tracking-widest mb-1">Codename / Username</label>
+              <input type="text" id="profile-username" value="Aesthetic Ghost" placeholder="Your name..." class="w-full bg-black/30 border border-white/15 rounded-xl px-4 py-2 text-sm font-orbitron text-white focus:outline-none focus:border-white/50 transition">
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] text-white/50 uppercase tracking-widest mb-1">Personal Bio & Sleeper Philosophy</label>
+              <input type="text" id="profile-bio" value="Sculpting athletic density in the winter shadows. Zero noise, pure kinetic precision." placeholder="Write your mantra..." class="w-full bg-black/30 border border-white/15 rounded-xl px-4 py-2 text-xs text-white/80 focus:outline-none focus:border-white/50 transition">
+            </div>
+          </div>
+        </div>
+
+        <!-- Preset ETHEREAL Geometric Nature Icons -->
+        <div class="pt-4 border-t border-white/10 space-y-2">
+          <span class="font-orbitron text-[10px] tracking-widest text-white/60 block uppercase">Or Select ETHEREAL Preset Avatar:</span>
+          <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+            <button onclick="selectPresetAvatar('peak')" class="w-10 h-10 rounded-full liquid-glass hover:border-white text-xs flex items-center justify-center transition border border-white/20" title="Solitary Peak">▲</button>
+            <button onclick="selectPresetAvatar('wave')" class="w-10 h-10 rounded-full liquid-glass hover:border-white text-xs flex items-center justify-center transition border border-white/20" title="River Current">≋</button>
+            <button onclick="selectPresetAvatar('moon')" class="w-10 h-10 rounded-full liquid-glass hover:border-white text-xs flex items-center justify-center transition border border-white/20" title="Winter Moon">☾</button>
+            <button onclick="selectPresetAvatar('sun')" class="w-10 h-10 rounded-full liquid-glass hover:border-white text-xs flex items-center justify-center transition border border-white/20" title="Alpine Sun">☼</button>
+            <button onclick="selectPresetAvatar('glyph')" class="w-10 h-10 rounded-full liquid-glass hover:border-white text-xs flex items-center justify-center transition border border-white/20" title="Ethereal Monolith">◈</button>
+            <button onclick="selectPresetAvatar('frost')" class="w-10 h-10 rounded-full liquid-glass hover:border-white text-xs flex items-center justify-center transition border border-white/20" title="Glacial Frost">❅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Data & Levers -->
+      <div class="liquid-glass rounded-3xl p-6 sm:p-8 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10 font-orbitron text-xs">
+          <span class="text-white">Physical Parameters & Benchmarks</span>
+          <span class="font-mono text-[9px] text-white/50">Stored Locally</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-orbitron">
+          <div class="p-3.5 rounded-2xl liquid-glass space-y-1">
+            <span class="text-white/50 text-[10px] block">HEIGHT</span>
+            <div class="flex items-baseline gap-1">
+              <input type="number" id="profile-height" value="175" class="w-16 bg-transparent text-white font-bold focus:outline-none border-b border-white/20">
+              <span class="text-white/50 font-mono text-[10px]">CM</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl liquid-glass space-y-1">
+            <span class="text-white/50 text-[10px] block">WEIGHT</span>
+            <div class="flex items-baseline gap-1">
+              <input type="number" id="profile-weight" value="68" class="w-16 bg-transparent text-white font-bold focus:outline-none border-b border-white/20">
+              <span class="text-white/50 font-mono text-[10px]">KG</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl liquid-glass space-y-1">
+            <span class="text-white/50 text-[10px] block">BODY FAT (EST)</span>
+            <div class="flex items-baseline gap-1">
+              <input type="number" id="profile-bf" value="13.5" step="0.5" class="w-16 bg-transparent text-white font-bold focus:outline-none border-b border-white/20">
+              <span class="text-white/50 font-mono text-[10px]">%</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl liquid-glass space-y-1">
+            <span class="text-white/50 text-[10px] block">SLEEPER GOAL</span>
+            <div class="flex items-baseline gap-1">
+              <input type="text" id="profile-goal" value="10 Pull-Ups" class="w-full bg-transparent text-white font-bold focus:outline-none border-b border-white/20 text-xs">
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 flex items-center justify-between text-[11px] font-mono text-white/60">
+          <span>Current Macro Ratio: 140g P · 2400 kcal</span>
+          <span class="text-white/80">Phase 1 (Week 1 of 16)</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-box" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none liquid-header text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-orbitron">
+    <span id="toast-icon" class="text-white font-bold">✓</span>
+    <span id="toast-message">Updated</span>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    /* =====================================================================
+       0. API KEY & APP STATE
+       ===================================================================== */
+    const apiKey = ""; // Environment automatically injects key at runtime
+
+    const appState = {
+      currentView: 'tracker',
+      currentMonth: 'nov',
+      currentDayIndex: 1, // Phase 1, Day 1
+      activeWorkoutRunning: false,
+      activeExerciseIndex: 0,
+      activeSetIndex: 0,
+      nutritionMode: 'ocr', // 'ocr' or 'manual'
+
+      // User Profile Data (Persisted to localStorage)
+      profile: {
+        username: 'Aesthetic Ghost',
+        bio: 'Sculpting athletic density in the winter shadows. Zero noise, pure kinetic precision.',
+        avatarType: 'preset', // 'preset' or 'custom'
+        avatarData: '▲',
+        height: 175,
+        weight: 68,
+        bodyFat: 13.5,
+        goal: '10 Strict Pull-Ups'
+      },
+
+      // Metrics for Radar
+      metrics: [
+        { key: 'pullups', label: 'Strict Pull-Ups', current: 2, ideal: 10, unit: 'reps', maxScale: 12, ratingCurrent: 3.5 },
+        { key: 'pushups', label: 'Slow Push-Ups (2s)', current: 12, ideal: 25, unit: 'reps', maxScale: 30, ratingCurrent: 7.5 },
+        { key: 'pike', label: 'Elevated Pike Press', current: 0, ideal: 10, unit: 'reps', maxScale: 12, ratingCurrent: 4.0 },
+        { key: 'diamond', label: 'Diamond Push-Ups', current: 10, ideal: 22, unit: 'reps', maxScale: 25, ratingCurrent: 7.0 },
+        { key: 'pistol', label: 'Pistol Squats', current: 1, ideal: 8, unit: 'reps/leg', maxScale: 10, ratingCurrent: 4.5 },
+        { key: 'core', label: 'Compression / Hold', current: 25, ideal: 60, unit: 'secs', maxScale: 60, ratingCurrent: 6.0 }
+      ],
+
+      // Daily Macro Targets & Log
+      nutritionTargets: { calories: 2400, protein: 140, carbs: 280, fats: 65 },
+      meals: [],
+      pendingScan: null,
+      currentUploadBase64: null,
+      currentUploadMime: 'image/jpeg',
+
+      // Day-by-Day Protocol Library
+      dayProtocols: {
+        1: {
+          phase: 'Phase 1',
+          dayNum: 1,
+          title: 'Upper Eccentric',
+          focus: '4s Negative Pull-Up Strength & Pike Shoulder Mass',
+          exercises: [
+            { title: 'Pull-Up Eccentric Negatives', target: 'Lats, Scapular Depressors, Biceps', cue: 'Jump chin over bar. 1s freeze. Strict 4-second descent into a complete dead hang.', tempo: '4s Negative', totalSets: 4, targetReps: '3 Reps', completed: [false, false, false, false] },
+            { title: 'Feet-Elevated Pike Push-Ups', target: 'Anterior & Lateral Deltoids', cue: 'Toes elevated on chair/bed. Hips stacked over shoulders. Descend head forward.', tempo: '2-1-1', totalSets: 3, targetReps: '6 Reps', completed: [false, false, false] },
+            { title: 'Inverted Bodyweight Rows', target: 'Mid-Back, Rhomboids, Rear Delts', cue: 'Under sturdy table. Pull lower chest to edge. 1s scapular pinch.', tempo: '2-1-1', totalSets: 3, targetReps: '8 Reps', completed: [false, false, false] },
+            { title: 'Slow-Tempo Decline Push-Ups', target: 'Clavicular Chest & Triceps', cue: 'Feet on chair, rigid core. 2 seconds controlled down to floor tap.', tempo: '2-0-1', totalSets: 3, targetReps: '8 Reps', completed: [false, false, false] },
+            { title: 'Active Dead Hang (Integrity)', target: 'Grip, Scapula & Spine Decompression', cue: 'Shoulders depressed away from ears, ribcage tucked down.', tempo: 'Static', totalSets: 2, targetReps: '30s Hold', completed: [false, false] }
+          ]
+        },
+        2: {
+          phase: 'Phase 1',
+          dayNum: 2,
+          title: 'Lower & Core Compression',
+          focus: 'Single-Leg Balance, Ankle Mobility & Hollow Body Compression',
+          exercises: [
+            { title: 'Chair-Assisted Pistol Squats', target: 'Quads, Glute Medius & Ankle Dorsiflexion', cue: 'Lower single leg to chair contact without collapsing knee inwards.', tempo: '3-1-1', totalSets: 3, targetReps: '6 Reps/Leg', completed: [false, false, false] },
+            { title: 'Bulgarian Split Squats', target: 'Unilateral Hip Drive & Quad Mass', cue: 'Rear foot on elevated surface. Deep sink with vertical front shin.', tempo: '2-1-1', totalSets: 3, targetReps: '8 Reps/Leg', completed: [false, false, false] },
+            { title: 'Hollow Body Compression Hold', target: 'Transverse Abdominis & Pelvic Tilt', cue: 'Lumbar spine pressed flat into the floor, toes pointed forward.', tempo: 'Static', totalSets: 3, targetReps: '30s Hold', completed: [false, false, false] },
+            { title: 'Reverse Crunches / Knee Tucks', target: 'Lower Abdominal Wall', cue: 'Roll pelvis upward toward ribs without momentum swing.', tempo: '2-1-1', totalSets: 3, targetReps: '12 Reps', completed: [false, false, false] }
+          ]
+        },
+        3: {
+          phase: 'Phase 1',
+          dayNum: 3,
+          title: 'Active Mobility & Tendon Restoration',
+          focus: 'Flushing Elbow Tendons & Thoracic Decompression',
+          exercises: [
+            { title: 'Passive Dead Hang', target: 'Spinal Decompression & Shoulder Capsule', cue: 'Completely relax shoulders into dead hang, slow deep nasal breaths.', tempo: 'Static', totalSets: 2, targetReps: '35s Hold', completed: [false, false] },
+            { title: 'Wrist Flexor & Extensor Rotations', target: 'Forearm Tendon Resilience', cue: 'Gentle palm presses on floor through all 360-degree rotations.', tempo: 'Fluid', totalSets: 2, targetReps: '60s Flow', completed: [false, false] },
+            { title: 'Thoracic Cat-Cows', target: 'Mid-Back Spinal Articulation', cue: 'Segmental arch and curl focusing on thoracic spine extension.', tempo: 'Slow', totalSets: 3, targetReps: '10 Reps', completed: [false, false, false] }
+          ]
+        },
+        4: {
+          phase: 'Phase 1',
+          dayNum: 4,
+          title: 'Upper Volume & Delts',
+          focus: 'Tricep Hypertrophy, Scapular Retraction & Deltoid Volume',
+          exercises: [
+            { title: 'Pull-Up Eccentric Negatives', target: 'Lats & Elbow Flexors', cue: 'Controlled 4s descent into full dead hang.', tempo: '4s Negative', totalSets: 4, targetReps: '3 Reps', completed: [false, false, false, false] },
+            { title: 'Elevated Pike Push-Ups', target: 'Anterior/Lateral Delts', cue: 'Hips vertical, smooth forward head descent.', tempo: '2-1-1', totalSets: 3, targetReps: '6 Reps', completed: [false, false, false] },
+            { title: 'Diamond Push-Ups', target: 'Triceps & Inner Chest Mass', cue: 'Hands forming diamond under sternum, elbows tucked.', tempo: '2-0-1', totalSets: 3, targetReps: '8 Reps', completed: [false, false, false] },
+            { title: 'Inverted Rows (Under Table)', target: 'Rhomboids & Mid-Back', cue: 'Crisp 1s pause at top chest contact.', tempo: '2-1-1', totalSets: 3, targetReps: '8 Reps', completed: [false, false, false] }
+          ]
+        }
+      },
+
+      chatHistory: [
+        {
+          role: 'model',
+          text: `**ETHEREAL Terminal Online.**\n\nBaseline profile calibrated: 2 strict pull-ups (bottleneck), 12 slow push-ups, 8 pikes, 10 diamond push-ups, 1 pistol squat.\n\nYour active session is loaded. Tap **Start Workout** to run through your sets.`
+        }
+      ]
+    };
+
+    /* =====================================================================
+       1. NAVIGATION & SPLASH
+       ===================================================================== */
+    function dismissSplash() {
+      const splash = document.getElementById('landing-splash-overlay');
+      if (splash) {
+        splash.style.transition = 'opacity 0.5s ease, visibility 0.5s ease';
+        splash.style.opacity = '0';
+        splash.style.visibility = 'hidden';
+      }
+    }
+    setTimeout(dismissSplash, 2600);
+
+    let isNavOpen = false;
+    function toggleNavDrawer() {
+      const drawer = document.getElementById('nav-drawer');
+      const drawerContent = document.getElementById('nav-drawer-content');
+      isNavOpen = !isNavOpen;
+
+      if (isNavOpen) {
+        drawer.classList.remove('opacity-0', 'pointer-events-none');
+        drawerContent.classList.remove('translate-x-full');
+      } else {
+        drawer.classList.add('opacity-0', 'pointer-events-none');
+        drawerContent.classList.add('translate-x-full');
+      }
+    }
+
+    function switchTab(tab) {
+      appState.currentView = tab;
+      ['tracker', 'focus', 'radar', 'calendar', 'nutrition', 'ai', 'profile'].forEach(t => {
+        const viewEl = document.getElementById(`view-${t}`);
+        const navEl = document.getElementById(`nav-item-${t}`);
+        const bgImg = document.getElementById(`bg-img-${t}`);
+
+        if (viewEl) {
+          if (t === tab) {
+            viewEl.classList.remove('hidden');
+            if (navEl) navEl.className = 'w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-white/30 bg-white/10 text-white';
+          } else {
+            viewEl.classList.add('hidden');
+            if (navEl) navEl.className = 'w-full text-left p-3.5 rounded-2xl transition flex items-center justify-between border border-transparent hover:border-white/15 text-white/70 hover:text-white';
+          }
+        }
+
+        // Crossfade landscape background to the designated section scenery
+        if (bgImg) {
+          bgImg.style.opacity = t === tab ? '1' : '0';
+        }
+      });
+
+      if (isNavOpen) toggleNavDrawer();
+      if (tab === 'radar') renderRadar();
+      if (tab === 'calendar') renderCalendar();
+      if (tab === 'nutrition') renderNutrition();
+      if (tab === 'profile') loadUserProfile();
+    }
+
+    /* =====================================================================
+       MULTI-AMBIENT NATURE SOUND SYSTEM (KEYBOARD SHORTCUTS: R, W, F, B, M)
+       ===================================================================== */
+    const ambientEngine = {
+      ctx: null,
+      activeType: 'river', // 'river', 'wind', 'rain', 'fire', 'off'
+      isPlaying: false,
+      nodes: {},
+
+      initContext() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+
+      stopCurrent() {
+        if (this.nodes.gain) {
+          try {
+            this.nodes.gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.6);
+            setTimeout(() => {
+              if (this.nodes.source) {
+                try { this.nodes.source.stop(); } catch(e){}
+                this.nodes.source.disconnect();
+              }
+              this.nodes = {};
+            }, 600);
+          } catch(e){}
+        }
+        this.isPlaying = false;
+      },
+
+      playRiver() {
+        this.initContext();
+        this.stopCurrent();
+
+        // Multi-band flowing river pink noise synthesis
+        const bufferSize = 2 * this.ctx.sampleRate;
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.05;
+          b6 = white * 0.115926;
+        }
+
+        const source = this.ctx.createBufferSource();
+        source.buffer = noiseBuffer;
+        source.loop = true;
+
+        const lpFilter = this.ctx.createBiquadFilter();
+        lpFilter.type = 'lowpass';
+        lpFilter.frequency.setValueAtTime(650, this.ctx.currentTime);
+
+        const bpFilter = this.ctx.createBiquadFilter();
+        bpFilter.type = 'bandpass';
+        bpFilter.frequency.setValueAtTime(450, this.ctx.currentTime);
+        bpFilter.Q.setValueAtTime(0.8, this.ctx.currentTime);
+
+        const lfo = this.ctx.createOscillator();
+        const lfoGain = this.ctx.createGain();
+        lfo.frequency.setValueAtTime(0.18, this.ctx.currentTime);
+        lfoGain.gain.setValueAtTime(140, this.ctx.currentTime);
+        lfo.connect(lfoGain);
+        lfoGain.connect(lpFilter.frequency);
+        lfo.start();
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.24, this.ctx.currentTime + 1.2);
+
+        source.connect(bpFilter);
+        bpFilter.connect(lpFilter);
+        lpFilter.connect(gain);
+        gain.connect(this.ctx.destination);
+        source.start();
+
+        this.nodes = { source, gain, lfo };
+        this.isPlaying = true;
+        this.activeType = 'river';
+        this.updateHUD('≋', 'RIVER (ON)');
+      },
+
+      playWind() {
+        this.initContext();
+        this.stopCurrent();
+
+        // Mountain Wind Breeze (Soft sweeps across high peaks)
+        const bufferSize = 2 * this.ctx.sampleRate;
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = (Math.random() * 2 - 1) * 0.04;
+        }
+
+        const source = this.ctx.createBufferSource();
+        source.buffer = noiseBuffer;
+        source.loop = true;
+
+        const bpFilter = this.ctx.createBiquadFilter();
+        bpFilter.type = 'bandpass';
+        bpFilter.frequency.setValueAtTime(320, this.ctx.currentTime);
+        bpFilter.Q.setValueAtTime(3.2, this.ctx.currentTime);
+
+        const lfo = this.ctx.createOscillator();
+        const lfoGain = this.ctx.createGain();
+        lfo.frequency.setValueAtTime(0.12, this.ctx.currentTime);
+        lfoGain.gain.setValueAtTime(220, this.ctx.currentTime);
+        lfo.connect(lfoGain);
+        lfoGain.connect(bpFilter.frequency);
+        lfo.start();
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, this.ctx.currentTime + 1);
+
+        source.connect(bpFilter);
+        bpFilter.connect(gain);
+        gain.connect(this.ctx.destination);
+        source.start();
+
+        this.nodes = { source, gain, lfo };
+        this.isPlaying = true;
+        this.activeType = 'wind';
+        this.updateHUD('彡', 'WIND BREEZE');
+      },
+
+      playRain() {
+        this.initContext();
+        this.stopCurrent();
+
+        // Forest Mountain Rain & Gentle Mist
+        const bufferSize = 2 * this.ctx.sampleRate;
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = (Math.random() * 2 - 1) * 0.05;
+        }
+
+        const source = this.ctx.createBufferSource();
+        source.buffer = noiseBuffer;
+        source.loop = true;
+
+        const lpFilter = this.ctx.createBiquadFilter();
+        lpFilter.type = 'lowpass';
+        lpFilter.frequency.setValueAtTime(1100, this.ctx.currentTime);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.2, this.ctx.currentTime + 1);
+
+        source.connect(lpFilter);
+        lpFilter.connect(gain);
+        gain.connect(this.ctx.destination);
+        source.start();
+
+        this.nodes = { source, gain };
+        this.isPlaying = true;
+        this.activeType = 'rain';
+        this.updateHUD('☔', 'MOUNTAIN RAIN');
+      },
+
+      playFire() {
+        this.initContext();
+        this.stopCurrent();
+
+        // Campfire & Warm Embers Crackle
+        const bufferSize = 2 * this.ctx.sampleRate;
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          const crackle = Math.random() > 0.998 ? (Math.random() * 2 - 1) * 0.6 : 0;
+          output[i] = ((Math.random() * 2 - 1) * 0.02) + crackle;
+        }
+
+        const source = this.ctx.createBufferSource();
+        source.buffer = noiseBuffer;
+        source.loop = true;
+
+        const lpFilter = this.ctx.createBiquadFilter();
+        lpFilter.type = 'lowpass';
+        lpFilter.frequency.setValueAtTime(800, this.ctx.currentTime);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.25, this.ctx.currentTime + 0.8);
+
+        source.connect(lpFilter);
+        lpFilter.connect(gain);
+        gain.connect(this.ctx.destination);
+        source.start();
+
+        this.nodes = { source, gain };
+        this.isPlaying = true;
+        this.activeType = 'fire';
+        this.updateHUD('🔥', 'CAMPFIRE');
+      },
+
+      updateHUD(icon, label) {
+        const iconEl = document.getElementById('ambient-current-icon');
+        const labelEl = document.getElementById('ambient-current-label');
+        if (iconEl) iconEl.innerText = icon;
+        if (labelEl) labelEl.innerText = label;
+      }
+    };
+
+    function triggerAmbientSound(type) {
+      if (type === 'river') {
+        if (ambientEngine.isPlaying && ambientEngine.activeType === 'river') {
+          ambientEngine.stopCurrent();
+          ambientEngine.updateHUD('—', 'MUTED');
+          showToast('River Stream Muted [R]');
+        } else {
+          ambientEngine.playRiver();
+          showToast('River Stream Active [R]');
+        }
+      } else if (type === 'wind') {
+        if (ambientEngine.isPlaying && ambientEngine.activeType === 'wind') {
+          ambientEngine.stopCurrent();
+          ambientEngine.updateHUD('—', 'MUTED');
+        } else {
+          ambientEngine.playWind();
+          showToast('Alpine Wind Breeze Active [W]');
+        }
+      } else if (type === 'rain') {
+        if (ambientEngine.isPlaying && ambientEngine.activeType === 'rain') {
+          ambientEngine.stopCurrent();
+          ambientEngine.updateHUD('—', 'MUTED');
+        } else {
+          ambientEngine.playRain();
+          showToast('Mountain Rain Active [F]');
+        }
+      } else if (type === 'fire') {
+        if (ambientEngine.isPlaying && ambientEngine.activeType === 'fire') {
+          ambientEngine.stopCurrent();
+          ambientEngine.updateHUD('—', 'MUTED');
+        } else {
+          ambientEngine.playFire();
+          showToast('Campfire Embers Active [B]');
+        }
+      }
+    }
+
+    function toggleAmbientMaster() {
+      if (ambientEngine.isPlaying) {
+        ambientEngine.stopCurrent();
+        ambientEngine.updateHUD('—', 'MUTED');
+        showToast('Ambient Sound Muted [M]');
+      } else {
+        ambientEngine.playRiver();
+        showToast('River Sound Resumed [R]');
+      }
+    }
+
+    // Global Keyboard Listener for R, W, F, B, M
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return; // Ignore when user is typing text
+      const key = e.key.toLowerCase();
+      if (key === 'r') triggerAmbientSound('river');
+      else if (key === 'w') triggerAmbientSound('wind');
+      else if (key === 'f') triggerAmbientSound('rain');
+      else if (key === 'b') triggerAmbientSound('fire');
+      else if (key === 'm') toggleAmbientMaster();
+    });
+
+    // Auto-init river audio on first user interaction
+    window.addEventListener('click', function initSoundOnce() {
+      if (!ambientEngine.isPlaying) {
+        ambientEngine.playRiver();
+      }
+      window.removeEventListener('click', initSoundOnce);
+    }, { once: true });
+
+    /* =====================================================================
+       AIR BREEZE CURSOR PARTICLES EFFECT & VISUAL RAINFALL
+       ===================================================================== */
+    const breezeCanvas = document.getElementById('breeze-canvas');
+    const breezeCtx = breezeCanvas.getContext('2d');
+    let particles = [];
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, speed: 0 };
+    let lastMouse = { x: mouse.x, y: mouse.y };
+    let isRainingVisual = false;
+    let rainDrops = [];
+
+    function resizeBreezeCanvas() {
+      breezeCanvas.width = window.innerWidth;
+      breezeCanvas.height = window.innerHeight;
+      initRainDrops();
+    }
+    window.addEventListener('resize', resizeBreezeCanvas);
+
+    function initRainDrops() {
+      rainDrops = [];
+      const count = Math.min(160, Math.floor(window.innerWidth / 9));
+      for (let i = 0; i < count; i++) {
+        rainDrops.push({
+          x: Math.random() * breezeCanvas.width,
+          y: Math.random() * breezeCanvas.height,
+          length: Math.random() * 26 + 14,
+          speed: Math.random() * 14 + 18,
+          alpha: Math.random() * 0.45 + 0.15,
+          angle: -0.12 // Gentle angle for mountain drift
+        });
+      }
+    }
+    resizeBreezeCanvas();
+
+    window.addEventListener('mousemove', (e) => {
+      const dx = e.clientX - lastMouse.x;
+      const dy = e.clientY - lastMouse.y;
+      mouse.speed = Math.sqrt(dx * dx + dy * dy);
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      lastMouse.x = e.clientX;
+      lastMouse.y = e.clientY;
+
+      // Spawn subtle mist breeze particles on cursor motion
+      if (mouse.speed > 2) {
+        const count = Math.min(4, Math.floor(mouse.speed / 4));
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: mouse.x + (Math.random() * 20 - 10),
+            y: mouse.y + (Math.random() * 20 - 10),
+            vx: (Math.random() - 0.5) * 1.5 + (dx * 0.08),
+            vy: (Math.random() - 0.5) * 1.5 + (dy * 0.08) - 0.4, // gentle upward drift
+            size: Math.random() * 2.5 + 1.2,
+            alpha: 0.35,
+            decay: Math.random() * 0.012 + 0.008
+          });
+        }
+      }
+    });
+
+    function animateBreezeParticles() {
+      breezeCtx.clearRect(0, 0, breezeCanvas.width, breezeCanvas.height);
+
+      // Render Visual Rain Streaks when timer finishes or rain is active
+      if (isRainingVisual) {
+        breezeCtx.save();
+        breezeCtx.lineWidth = 1;
+        for (let i = 0; i < rainDrops.length; i++) {
+          const r = rainDrops[i];
+          breezeCtx.strokeStyle = `rgba(255, 255, 255, ${r.alpha})`;
+          breezeCtx.beginPath();
+          breezeCtx.moveTo(r.x, r.y);
+          breezeCtx.lineTo(r.x + Math.sin(r.angle) * r.length, r.y + Math.cos(r.angle) * r.length);
+          breezeCtx.stroke();
+
+          r.y += r.speed;
+          r.x += Math.sin(r.angle) * r.speed;
+
+          if (r.y > breezeCanvas.height) {
+            r.y = -r.length;
+            r.x = Math.random() * breezeCanvas.width;
+          }
+        }
+        breezeCtx.restore();
+      }
+
+      // Render Breeze Cursor Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+        p.size *= 0.99;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+        } else {
+          breezeCtx.save();
+          breezeCtx.beginPath();
+          breezeCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          breezeCtx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+          breezeCtx.shadowColor = '#ffffff';
+          breezeCtx.shadowBlur = 8;
+          breezeCtx.fill();
+          breezeCtx.restore();
+        }
+      }
+      requestAnimationFrame(animateBreezeParticles);
+    }
+    requestAnimationFrame(animateBreezeParticles);
+
+    /* =====================================================================
+       PARALLAX SCROLL ZOOM EFFECT ON BACKGROUND SCENERY
+       ===================================================================== */
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const zoomFactor = 1 + Math.min(0.18, scrollY * 0.00025);
+      const layers = document.querySelectorAll('.bg-landscape-layer');
+      layers.forEach(layer => {
+        layer.style.transform = `scale(${zoomFactor})`;
+      });
+    }, { passive: true });
+
+    /* =====================================================================
+       2. WORKOUT ENGINE: INTERACTIVE SEQUENTIAL STEP-BY-STEP RUNNER
+       ===================================================================== */
+    function getActiveProtocol() {
+      return appState.dayProtocols[appState.currentDayIndex] || appState.dayProtocols[1];
+    }
+
+    function renderWorkoutView() {
+      const proto = getActiveProtocol();
+      const dayFormatted = String(appState.currentDayIndex).padStart(2, '0');
+      
+      // Update top-left badge and centered title
+      const topBadge = document.getElementById('top-day-badge');
+      if (topBadge) topBadge.innerText = `DAY ${dayFormatted} OF 112`;
+
+      const titleEl = document.getElementById('active-day-title');
+      if (titleEl) titleEl.innerText = `${proto.phase}, Day ${proto.dayNum}: ${proto.title}`;
+
+      let totalSets = 0;
+      let completedSets = 0;
+
+      proto.exercises.forEach(ex => {
+        totalSets += ex.totalSets;
+        completedSets += ex.completed.filter(Boolean).length;
+      });
+
+      if (completedSets === totalSets && totalSets > 0) {
+        document.getElementById('workout-prelaunch-card').classList.add('hidden');
+        document.getElementById('workout-active-runner').classList.add('hidden');
+        document.getElementById('workout-completed-card').classList.remove('hidden');
+      } else if (appState.activeWorkoutRunning) {
+        document.getElementById('workout-prelaunch-card').classList.add('hidden');
+        document.getElementById('workout-completed-card').classList.add('hidden');
+        document.getElementById('workout-active-runner').classList.remove('hidden');
+        updateRunnerStepDisplay();
+      } else {
+        document.getElementById('workout-prelaunch-card').classList.remove('hidden');
+        document.getElementById('workout-active-runner').classList.add('hidden');
+        document.getElementById('workout-completed-card').classList.add('hidden');
+      }
+    }
+
+    /* =====================================================================
+       2.1 DAY NAVIGATION
+       ===================================================================== */
+    function nextDay() {
+      if (appState.currentDayIndex < 112) {
+        appState.currentDayIndex++;
+        appState.activeWorkoutRunning = false;
+        appState.activeExerciseIndex = 0;
+        appState.activeSetIndex = 0;
+        renderWorkoutView();
+        showToast(`Switched to Day ${appState.currentDayIndex}`);
+      }
+    }
+
+    function prevDay() {
+      if (appState.currentDayIndex > 1) {
+        appState.currentDayIndex--;
+        appState.activeWorkoutRunning = false;
+        appState.activeExerciseIndex = 0;
+        appState.activeSetIndex = 0;
+        renderWorkoutView();
+        showToast(`Switched to Day ${appState.currentDayIndex}`);
+      }
+    }
+
+    /* =====================================================================
+       2.2 INTERACTIVE WORKOUT RUNNER
+       ===================================================================== */
+    function startInteractiveWorkout() {
+      appState.activeWorkoutRunning = true;
+      appState.activeExerciseIndex = 0;
+      appState.activeSetIndex = 0;
+      renderWorkoutView();
+      showToast('Session Started. Focus on tempo.');
+    }
+
+    function updateRunnerStepDisplay() {
+      const proto = getActiveProtocol();
+      const ex = proto.exercises[appState.activeExerciseIndex];
+      if (!ex) return;
+
+      const stepInd = document.getElementById('runner-step-indicator');
+      const progInd = document.getElementById('runner-total-progress');
+      const title = document.getElementById('runner-ex-title');
+      const target = document.getElementById('runner-ex-target');
+      const cue = document.getElementById('runner-ex-cue');
+      const reps = document.getElementById('runner-set-target-reps');
+      const tickBtn = document.getElementById('runner-tick-circle');
+
+      let totalSets = 0;
+      let doneSets = 0;
+      proto.exercises.forEach(e => {
+        totalSets += e.totalSets;
+        doneSets += e.completed.filter(Boolean).length;
+      });
+
+      const pct = Math.round((doneSets / Math.max(1, totalSets)) * 100);
+      if (stepInd) stepInd.innerText = `EXERCISE ${appState.activeExerciseIndex + 1} OF ${proto.exercises.length} · SET ${appState.activeSetIndex + 1} OF ${ex.totalSets}`;
+      if (progInd) progInd.innerText = `${pct}% Completed`;
+      if (title) title.innerText = ex.title;
+      if (target) target.innerText = ex.target;
+      if (cue) cue.innerText = ex.cue;
+      if (reps) reps.innerText = `Target: ${ex.targetReps} (${ex.tempo})`;
+
+      const isCurrentSetDone = ex.completed[appState.activeSetIndex];
+      if (tickBtn) {
+        if (isCurrentSetDone) {
+          tickBtn.classList.add('border-white', 'bg-white/20');
+          tickBtn.classList.remove('border-white/30', 'bg-white/[0.04]');
+        } else {
+          tickBtn.classList.remove('border-white', 'bg-white/20');
+          tickBtn.classList.add('border-white/30', 'bg-white/[0.04]');
+        }
+      }
+    }
+
+    function tickCurrentSet() {
+      const proto = getActiveProtocol();
+      const ex = proto.exercises[appState.activeExerciseIndex];
+      if (!ex) return;
+
+      ex.completed[appState.activeSetIndex] = true;
+      playChime();
+      startRestTimer();
+
+      if (appState.activeSetIndex + 1 < ex.totalSets) {
+        appState.activeSetIndex++;
+      } else if (appState.activeExerciseIndex + 1 < proto.exercises.length) {
+        appState.activeExerciseIndex++;
+        appState.activeSetIndex = 0;
+      } else {
+        showToast('All movements completed! Great work.');
+      }
+      renderWorkoutView();
+    }
+
+    function runnerPrevStep() {
+      const proto = getActiveProtocol();
+      if (appState.activeSetIndex > 0) {
+        appState.activeSetIndex--;
+      } else if (appState.activeExerciseIndex > 0) {
+        appState.activeExerciseIndex--;
+        const prevEx = proto.exercises[appState.activeExerciseIndex];
+        appState.activeSetIndex = prevEx.totalSets - 1;
+      }
+      renderWorkoutView();
+    }
+
+    function runnerNextStep() {
+      const proto = getActiveProtocol();
+      const ex = proto.exercises[appState.activeExerciseIndex];
+      if (appState.activeSetIndex + 1 < ex.totalSets) {
+        appState.activeSetIndex++;
+      } else if (appState.activeExerciseIndex + 1 < proto.exercises.length) {
+        appState.activeExerciseIndex++;
+        appState.activeSetIndex = 0;
+      }
+      renderWorkoutView();
+    }
+
+    function exitWorkoutRunner() {
+      appState.activeWorkoutRunning = false;
+      renderWorkoutView();
+    }
+
+    function advanceToNextDaySession() {
+      if (appState.currentDayIndex < 112) {
+        appState.currentDayIndex++;
+        appState.activeWorkoutRunning = false;
+        appState.activeExerciseIndex = 0;
+        appState.activeSetIndex = 0;
+        renderWorkoutView();
+        showToast(`Advanced to Day ${appState.currentDayIndex}`);
+      }
+    }
+
+    function resetCurrentDaySession() {
+      const proto = getActiveProtocol();
+      proto.exercises.forEach(ex => {
+        ex.completed = ex.completed.map(() => false);
+      });
+      appState.activeWorkoutRunning = true;
+      appState.activeExerciseIndex = 0;
+      appState.activeSetIndex = 0;
+      renderWorkoutView();
+      showToast('Session reset.');
+    }
+
+    /* =====================================================================
+       3. METRONOME & REST TIMER
+       ===================================================================== */
+    let metroInterval = null;
+    let metroBeat = 0;
+    let isMetroActive = false;
+
+    function toggleMetronome() {
+      if (isMetroActive) {
+        stopMetronome();
+      } else {
+        startMetronome();
+      }
+    }
+
+    function startMetronome() {
+      ambientEngine.initContext();
+      isMetroActive = true;
+      metroBeat = 0;
+      const label = document.getElementById('metro-label');
+      if (label) label.innerText = 'Stop 4s Beats';
+
+      metroInterval = setInterval(() => {
+        metroBeat = (metroBeat % 4) + 1;
+        for (let i = 1; i <= 4; i++) {
+          const b = document.getElementById(`metro-beat-${i}`);
+          if (b) {
+            if (i === metroBeat) {
+              b.className = 'w-10 h-10 rounded-xl bg-white text-black font-bold flex items-center justify-center text-xs font-orbitron transition-all shadow-[0_0_12px_#ffffff] scale-105';
+            } else {
+              b.className = 'w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xs font-orbitron text-white/50 transition-all';
+            }
+          }
+        }
+        playBeep(metroBeat === 1 ? 880 : 440);
+      }, 1000);
+    }
+
+    function stopMetronome() {
+      isMetroActive = false;
+      if (metroInterval) clearInterval(metroInterval);
+      const label = document.getElementById('metro-label');
+      if (label) label.innerText = 'Start 4s Beats';
+      for (let i = 1; i <= 4; i++) {
+        const b = document.getElementById(`metro-beat-${i}`);
+        if (b) b.className = 'w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xs font-orbitron text-white/50 transition-all';
+      }
+    }
+
+    let timerDuration = 90;
+    let timerRemaining = 90;
+    let timerInterval = null;
+    let isTimerRunning = false;
+
+    function setTimerDuration(seconds) {
+      timerDuration = seconds;
+      timerRemaining = seconds;
+      updateTimerDisplay();
+      const label = document.getElementById('timer-btn-label');
+      if (label && !isTimerRunning) label.innerText = `Start Rest (${seconds}s)`;
+    }
+
+    function updateTimerDisplay() {
+      const min = String(Math.floor(timerRemaining / 60)).padStart(2, '0');
+      const sec = String(timerRemaining % 60).padStart(2, '0');
+      const d = document.getElementById('timer-display');
+      if (d) d.innerText = `${min}:${sec}`;
+    }
+
+    function toggleTimer() {
+      if (isTimerRunning) {
+        pauseTimer();
+      } else {
+        startRestTimer();
+      }
+    }
+
+    function startRestTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      isTimerRunning = true;
+      const status = document.getElementById('timer-status');
+      const label = document.getElementById('timer-btn-label');
+      if (status) status.innerText = 'Resting...';
+      if (label) label.innerText = 'Pause Rest';
+
+      timerInterval = setInterval(() => {
+        if (timerRemaining > 0) {
+          timerRemaining--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          isTimerRunning = false;
+          playChime();
+          if (status) status.innerText = 'Rest Complete';
+          if (label) label.innerText = `Start Rest (${timerDuration}s)`;
+          timerRemaining = timerDuration;
+          showToast('Rest completed! Next set ready.');
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      isTimerRunning = false;
+      if (timerInterval) clearInterval(timerInterval);
+      const status = document.getElementById('timer-status');
+      const label = document.getElementById('timer-btn-label');
+      if (status) status.innerText = 'Paused';
+      if (label) label.innerText = 'Resume Rest';
+    }
+
+    function resetTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      isTimerRunning = false;
+      timerRemaining = timerDuration;
+      updateTimerDisplay();
+      const status = document.getElementById('timer-status');
+      const label = document.getElementById('timer-btn-label');
+      if (status) status.innerText = 'Awaiting Trigger';
+      if (label) label.innerText = `Start Rest (${timerDuration}s)`;
+    }
+
+    function playBeep(freq = 440) {
+      try {
+        ambientEngine.initContext();
+        const ctx = ambientEngine.ctx;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch (e) {}
+    }
+
+    function playChime() {
+      try {
+        ambientEngine.initContext();
+        const ctx = ambientEngine.ctx;
+        [523.25, 659.25, 783.99].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.08);
+          osc.stop(ctx.currentTime + idx * 0.08 + 0.45);
+        });
+      } catch (e) {}
+    }
+
+    /* =====================================================================
+       2.3 FOCUS TIMER LOGIC (UP TO 2 HOURS · SEC/MIN/HR TOGGLES · RAIN ARRIVAL)
+       ===================================================================== */
+    const focusState = {
+      hours: 0,
+      minutes: 45,
+      seconds: 0,
+      totalSeconds: 45 * 60,
+      remainingSeconds: 45 * 60,
+      isRunning: false,
+      interval: null
+    };
+
+    function adjustFocusUnit(unit, delta) {
+      if (focusState.isRunning) return; // Cannot adjust while actively counting down
+
+      if (unit === 'h') {
+        focusState.hours = Math.max(0, Math.min(2, focusState.hours + delta));
+        // Max 2 hours total limit check
+        if (focusState.hours === 2) {
+          focusState.minutes = 0;
+          focusState.seconds = 0;
+        }
+      } else if (unit === 'm') {
+        if (focusState.hours === 2) {
+          focusState.minutes = 0;
+        } else {
+          let nextM = focusState.minutes + delta;
+          if (nextM < 0) nextM = 55;
+          if (nextM >= 60) nextM = 0;
+          focusState.minutes = nextM;
+        }
+      } else if (unit === 's') {
+        if (focusState.hours === 2) {
+          focusState.seconds = 0;
+        } else {
+          let nextS = focusState.seconds + delta;
+          if (nextS < 0) nextS = 50;
+          if (nextS >= 60) nextS = 0;
+          focusState.seconds = nextS;
+        }
+      }
+
+      focusState.totalSeconds = (focusState.hours * 3600) + (focusState.minutes * 60) + focusState.seconds;
+      if (focusState.totalSeconds > 7200) focusState.totalSeconds = 7200; // Hard clamp to 2 hours
+      if (focusState.totalSeconds === 0) {
+        focusState.minutes = 1;
+        focusState.totalSeconds = 60;
+      }
+      focusState.remainingSeconds = focusState.totalSeconds;
+      updateFocusDisplay();
+    }
+
+    function setFocusPreset(h, m, s) {
+      if (focusState.isRunning) pauseFocusTimer();
+      focusState.hours = h;
+      focusState.minutes = m;
+      focusState.seconds = s;
+      focusState.totalSeconds = (h * 3600) + (m * 60) + s;
+      if (focusState.totalSeconds > 7200) focusState.totalSeconds = 7200;
+      focusState.remainingSeconds = focusState.totalSeconds;
+      updateFocusDisplay();
+      showToast(`Focus set: ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`);
+    }
+
+    function updateFocusDisplay() {
+      const h = Math.floor(focusState.remainingSeconds / 3600);
+      const m = Math.floor((focusState.remainingSeconds % 3600) / 60);
+      const s = focusState.remainingSeconds % 60;
+
+      const formattedH = String(h).padStart(2, '0');
+      const formattedM = String(m).padStart(2, '0');
+      const formattedS = String(s).padStart(2, '0');
+
+      const display = document.getElementById('focus-countdown-display');
+      if (display) display.innerText = `${formattedH}:${formattedM}:${formattedS}`;
+
+      // Update Stepper Labels
+      const valH = document.getElementById('focus-val-hours');
+      const valM = document.getElementById('focus-val-minutes');
+      const valS = document.getElementById('focus-val-seconds');
+      if (valH) valH.innerText = formattedH;
+      if (valM) valM.innerText = formattedM;
+      if (valS) valS.innerText = formattedS;
+    }
+
+    function toggleFocusTimer() {
+      if (focusState.isRunning) {
+        pauseFocusTimer();
+      } else {
+        startFocusTimer();
+      }
+    }
+
+    function startFocusTimer() {
+      if (focusState.remainingSeconds <= 0) {
+        focusState.remainingSeconds = focusState.totalSeconds || 2700;
+      }
+      ambientEngine.initContext();
+      focusState.isRunning = true;
+      document.getElementById('focus-btn-label').innerText = 'PAUSE FOCUS';
+      document.getElementById('focus-rain-alert').classList.add('hidden');
+      document.getElementById('focus-settings-controls').classList.add('opacity-40', 'pointer-events-none');
+
+      focusState.interval = setInterval(() => {
+        if (focusState.remainingSeconds > 0) {
+          focusState.remainingSeconds--;
+          updateFocusDisplay();
+        } else {
+          // Timer Ended: RAIN ARRIVAL!
+          clearInterval(focusState.interval);
+          focusState.isRunning = false;
+          triggerFocusRainArrival();
+        }
+      }, 1000);
+      showToast('Focus session active');
+    }
+
+    function pauseFocusTimer() {
+      focusState.isRunning = false;
+      if (focusState.interval) clearInterval(focusState.interval);
+      document.getElementById('focus-btn-label').innerText = 'RESUME FOCUS';
+      document.getElementById('focus-settings-controls').classList.remove('opacity-40', 'pointer-events-none');
+    }
+
+    function resetFocusTimer() {
+      focusState.isRunning = false;
+      if (focusState.interval) clearInterval(focusState.interval);
+      focusState.remainingSeconds = focusState.totalSeconds;
+      updateFocusDisplay();
+      document.getElementById('focus-btn-label').innerText = 'START FOCUS';
+      document.getElementById('focus-settings-controls').classList.remove('opacity-40', 'pointer-events-none');
+      document.getElementById('focus-rain-alert').classList.add('hidden');
+    }
+
+    function triggerFocusRainArrival() {
+      // 1. Play atmospheric gentle rain chime
+      playChime();
+
+      // 2. Start the synthesized mountain rain ambient sound
+      ambientEngine.playRain();
+
+      // 3. Trigger visual falling rain streaks on the canvas
+      isRainingVisual = true;
+
+      // 4. Update UI labels and reveal celebratory rain banner
+      document.getElementById('focus-btn-label').innerText = 'START FOCUS';
+      document.getElementById('focus-settings-controls').classList.remove('opacity-40', 'pointer-events-none');
+      document.getElementById('focus-rain-alert').classList.remove('hidden');
+
+      showToast('Focus session complete. Rain descends upon the valley.', '☔');
+    }
+
+    function stopFocusRain() {
+      ambientEngine.stopCurrent();
+      ambientEngine.updateHUD('—', 'MUTED');
+      isRainingVisual = false;
+      document.getElementById('focus-rain-alert').classList.add('hidden');
+      showToast('Rain flow paused');
+    }
+
+    /* =====================================================================
+       PROFILE SECTION LOGIC ("YOU")
+       ===================================================================== */
+    function loadUserProfile() {
+      try {
+        const saved = localStorage.getItem('ethereal_profile');
+        if (saved) {
+          appState.profile = { ...appState.profile, ...JSON.parse(saved) };
+        }
+      } catch (e) {}
+
+      const p = appState.profile;
+      const usernameInput = document.getElementById('profile-username');
+      const bioInput = document.getElementById('profile-bio');
+      const heightInput = document.getElementById('profile-height');
+      const weightInput = document.getElementById('profile-weight');
+      const bfInput = document.getElementById('profile-bf');
+      const goalInput = document.getElementById('profile-goal');
+      const drawerLabel = document.getElementById('drawer-username-label');
+
+      if (usernameInput) usernameInput.value = p.username || 'Aesthetic Ghost';
+      if (bioInput) bioInput.value = p.bio || '';
+      if (heightInput) heightInput.value = p.height || 175;
+      if (weightInput) weightInput.value = p.weight || 68;
+      if (bfInput) bfInput.value = p.bodyFat || 13.5;
+      if (goalInput) goalInput.value = p.goal || '10 Pull-Ups';
+      if (drawerLabel) drawerLabel.innerText = p.username || 'YOU';
+
+      renderProfileAvatar();
+    }
+
+    function renderProfileAvatar() {
+      const p = appState.profile;
+      const avatarBox = document.getElementById('user-pfp-avatar');
+      const drawerAvatar = document.getElementById('drawer-pfp-avatar');
+      if (!avatarBox) return;
+
+      if (p.avatarType === 'custom' && p.avatarData) {
+        avatarBox.innerHTML = `<img src="${p.avatarData}" class="w-full h-full object-cover">`;
+        if (drawerAvatar) drawerAvatar.innerHTML = `<img src="${p.avatarData}" class="w-full h-full object-cover">`;
+      } else {
+        const icon = p.avatarData || '▲';
+        avatarBox.innerHTML = `<span class="font-orbitron text-2xl font-light text-white">${icon}</span>`;
+        if (drawerAvatar) drawerAvatar.innerHTML = `<span class="font-orbitron text-xs font-light text-white">${icon}</span>`;
+      }
+    }
+
+    function selectPresetAvatar(type) {
+      const iconMap = { peak: '▲', wave: '≋', moon: '☾', sun: '☼', glyph: '◈', frost: '❅' };
+      appState.profile.avatarType = 'preset';
+      appState.profile.avatarData = iconMap[type] || '▲';
+      renderProfileAvatar();
+      saveUserProfile();
+      showToast('Avatar updated');
+    }
+
+    function handlePfpUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        appState.profile.avatarType = 'custom';
+        appState.profile.avatarData = e.target.result;
+        renderProfileAvatar();
+        saveUserProfile();
+        showToast('Profile photo updated');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveUserProfile() {
+      const usernameInput = document.getElementById('profile-username');
+      const bioInput = document.getElementById('profile-bio');
+      const heightInput = document.getElementById('profile-height');
+      const weightInput = document.getElementById('profile-weight');
+      const bfInput = document.getElementById('profile-bf');
+      const goalInput = document.getElementById('profile-goal');
+
+      appState.profile.username = usernameInput ? usernameInput.value.trim() : 'Aesthetic Ghost';
+      appState.profile.bio = bioInput ? bioInput.value.trim() : '';
+      appState.profile.height = heightInput ? Number(heightInput.value) || 175 : 175;
+      appState.profile.weight = weightInput ? Number(weightInput.value) || 68 : 68;
+      appState.profile.bodyFat = bfInput ? Number(bfInput.value) || 13.5 : 13.5;
+      appState.profile.goal = goalInput ? goalInput.value.trim() : '10 Pull-Ups';
+
+      const drawerLabel = document.getElementById('drawer-username-label');
+      if (drawerLabel) drawerLabel.innerText = appState.profile.username;
+
+      try {
+        localStorage.setItem('ethereal_profile', JSON.stringify(appState.profile));
+      } catch (e) {}
+
+      showToast('Profile parameters saved');
+    }
+
+    /* =====================================================================
+       4. BIOMECHANICAL RADAR (CURRENT VS IDEAL)
+       ===================================================================== */
+    function renderRadar() {
+      const svg = document.getElementById('radar-svg');
+      if (!svg) return;
+      svg.innerHTML = '';
+
+      const cx = 200, cy = 200, r = 140;
+      const count = appState.metrics.length;
+      const stepAngle = (Math.PI * 2) / count;
+
+      // Concentric background grid polygons
+      for (let level = 1; level <= 5; level++) {
+        const factor = level / 5;
+        const pts = [];
+        for (let i = 0; i < count; i++) {
+          const angle = i * stepAngle - Math.PI / 2;
+          pts.push(`${cx + r * factor * Math.cos(angle)},${cy + r * factor * Math.sin(angle)}`);
+        }
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        poly.setAttribute('points', pts.join(' '));
+        poly.setAttribute('fill', 'none');
+        poly.setAttribute('stroke', 'rgba(255, 255, 255, 0.1)');
+        poly.setAttribute('stroke-width', '1');
+        svg.appendChild(poly);
+      }
+
+      // Axis lines & labels
+      appState.metrics.forEach((m, i) => {
+        const angle = i * stepAngle - Math.PI / 2;
+        const x = cx + r * Math.cos(angle);
+        const y = cy + r * Math.sin(angle);
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', cx);
+        line.setAttribute('y1', cy);
+        line.setAttribute('x2', x);
+        line.setAttribute('y2', y);
+        line.setAttribute('stroke', 'rgba(255, 255, 255, 0.15)');
+        line.setAttribute('stroke-width', '1');
+        svg.appendChild(line);
+
+        const labelRadius = r + 24;
+        const lx = cx + labelRadius * Math.cos(angle);
+        const ly = cy + labelRadius * Math.sin(angle);
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', lx);
+        text.setAttribute('y', ly);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('dominant-baseline', 'central');
+        text.setAttribute('fill', 'rgba(255, 255, 255, 0.8)');
+        text.setAttribute('font-size', '9');
+        text.setAttribute('font-family', 'Orbitron, sans-serif');
+        text.textContent = m.label;
+        svg.appendChild(text);
+      });
+
+      // Ideal polygon
+      const idealPoints = appState.metrics.map((m, i) => {
+        const angle = i * stepAngle - Math.PI / 2;
+        const norm = Math.min(1, m.ideal / m.maxScale);
+        return `${cx + r * norm * Math.cos(angle)},${cy + r * norm * Math.sin(angle)}`;
+      });
+      const polyIdeal = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      polyIdeal.setAttribute('points', idealPoints.join(' '));
+      polyIdeal.setAttribute('fill', 'rgba(255, 255, 255, 0.04)');
+      polyIdeal.setAttribute('stroke', 'rgba(255, 255, 255, 0.4)');
+      polyIdeal.setAttribute('stroke-dasharray', '4,3');
+      svg.appendChild(polyIdeal);
+
+      // Current polygon
+      const currPoints = appState.metrics.map((m, i) => {
+        const angle = i * stepAngle - Math.PI / 2;
+        const norm = Math.min(1, m.current / m.maxScale);
+        return `${cx + r * norm * Math.cos(angle)},${cy + r * norm * Math.sin(angle)}`;
+      });
+      const polyCurr = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      polyCurr.setAttribute('points', currPoints.join(' '));
+      polyCurr.setAttribute('fill', 'rgba(255, 255, 255, 0.2)');
+      polyCurr.setAttribute('stroke', '#ffffff');
+      polyCurr.setAttribute('stroke-width', '1.5');
+      svg.appendChild(polyCurr);
+
+      // Sliders editor
+      const editor = document.getElementById('radar-metrics-editor');
+      if (!editor) return;
+      editor.innerHTML = '';
+      appState.metrics.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-2xl liquid-glass space-y-1';
+        div.innerHTML = `
+          <div class="flex items-center justify-between text-xs font-orbitron">
+            <span class="text-white">${m.label}</span>
+            <span class="text-white font-bold">${m.current} / ${m.ideal} ${m.unit}</span>
+          </div>
+          <input type="range" min="0" max="${m.maxScale}" value="${m.current}" oninput="updateMetric('${m.key}', this.value)" class="w-full accent-white bg-white/10 h-1.5 rounded-lg appearance-none cursor-pointer">
+        `;
+        editor.appendChild(div);
+      });
+    }
+
+    function updateMetric(key, val) {
+      const m = appState.metrics.find(x => x.key === key);
+      if (m) {
+        m.current = Number(val);
+        m.ratingCurrent = Number(((m.current / m.ideal) * 10).toFixed(1));
+        renderRadar();
+      }
+    }
+
+    /* =====================================================================
+       5. WINTER CALENDAR (NOV - FEB)
+       ===================================================================== */
+    const calMonths = {
+      nov: { total: 30, offset: 6, phase: 'Phase 1', title: 'Neural Priming' },
+      dec: { total: 31, offset: 1, phase: 'Phase 2', title: 'Volume Hypertrophy' },
+      jan: { total: 31, offset: 4, phase: 'Phase 3', title: 'Hypertrophy Peak' },
+      feb: { total: 28, offset: 0, phase: 'Phase 4', title: 'Deload & Benchmark' }
+    };
+
+    function switchMonth(m) {
+      appState.currentMonth = m;
+      ['nov', 'dec', 'jan', 'feb'].forEach(k => {
+        const btn = document.getElementById(`month-btn-${k}`);
+        if (btn) btn.className = k === m ? 'px-3 py-1.5 rounded-lg bg-white/20 text-white font-medium transition' : 'px-3 py-1.5 rounded-lg text-white/50 hover:text-white transition';
+      });
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const info = calMonths[appState.currentMonth];
+      document.getElementById('cal-phase-badge').innerText = info.phase;
+      document.getElementById('cal-phase-title').innerText = info.title;
+
+      const grid = document.getElementById('calendar-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      for (let i = 0; i < info.offset; i++) {
+        const blank = document.createElement('div');
+        blank.className = 'h-12 rounded-xl bg-white/[0.02] border border-white/5 opacity-20';
+        grid.appendChild(blank);
+      }
+
+      for (let d = 1; d <= info.total; d++) {
+        const dayTile = document.createElement('div');
+        const isCurrentDay = appState.currentMonth === 'nov' && d === appState.currentDayIndex;
+        const isDone = appState.currentMonth === 'nov' && d < appState.currentDayIndex;
+
+        dayTile.className = `h-12 p-2 rounded-xl liquid-glass flex flex-col justify-between text-xs font-orbitron transition ${isCurrentDay ? 'border-white bg-white/15 text-white shadow-[0_0_12px_rgba(255,255,255,0.4)]' : 'text-white/60'}`;
+        dayTile.innerHTML = `
+          <span class="font-normal">${d}</span>
+          <span class="text-[9px] font-mono text-white/50">${isDone ? '✓' : (isCurrentDay ? 'ACTIVE' : '')}</span>
+        `;
+        grid.appendChild(dayTile);
+      }
+    }
+
+    /* =====================================================================
+       6. NUTRITION: VISION OCR & TOGGLE & RESET
+       ===================================================================== */
+    function toggleNutritionInputMode() {
+      const ocrPanel = document.getElementById('panel-ocr-scan');
+      const manualPanel = document.getElementById('panel-manual-log');
+      const label = document.getElementById('toggle-label');
+      const icon = document.getElementById('toggle-icon');
+
+      if (appState.nutritionMode === 'ocr') {
+        appState.nutritionMode = 'manual';
+        ocrPanel.classList.add('hidden');
+        manualPanel.classList.remove('hidden');
+        label.innerText = 'Switch to OCR Scan';
+        icon.innerText = '⚡';
+      } else {
+        appState.nutritionMode = 'ocr';
+        manualPanel.classList.add('hidden');
+        ocrPanel.classList.remove('hidden');
+        label.innerText = 'Quick Log Mode';
+        icon.innerText = '📷';
+      }
+    }
+
+    function resetNutritionLog() {
+      appState.meals = [];
+      renderNutrition();
+      showToast('Daily nutrition log reset to zero.');
+    }
+
+    function handleFoodImageSelect(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const parts = e.target.result.split(',');
+        appState.currentUploadBase64 = parts[1];
+        appState.currentUploadMime = file.type || 'image/jpeg';
+        document.getElementById('food-img-preview').src = e.target.result;
+        document.getElementById('upload-prompt-view').classList.add('hidden');
+        document.getElementById('upload-preview-view').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function scanMealWithGemini() {
+      const textDesc = document.getElementById('food-desc-input').value.trim();
+      const hasImg = Boolean(appState.currentUploadBase64);
+
+      if (!hasImg && !textDesc) {
+        showToast('Please upload a photo or write a food description.');
+        return;
+      }
+
+      const btn = document.getElementById('scan-submit-btn');
+      btn.disabled = true;
+      btn.innerText = 'Scanning with Gemini Vision...';
+
+      const prompt = `Analyze this meal photo/description for calisthenics sleeper build nutrition: "${textDesc}".
+Return strictly a valid JSON object matching:
+{
+  "mealName": "Name of food",
+  "calories": 450,
+  "protein": 30,
+  "carbs": 50,
+  "fats": 12,
+  "sleeperScore": "8.8/10",
+  "verdict": "Short 1-sentence recovery assessment."
+}`;
+
+      try {
+        const parts = [{ text: prompt }];
+        if (hasImg) {
+          parts.push({
+            inlineData: {
+              mimeType: appState.currentUploadMime,
+              data: appState.currentUploadBase64
+            }
+          });
+        }
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts }],
+            generationConfig: { responseMimeType: 'application/json' }
+          })
+        });
+
+        const data = await res.json();
+        const raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = JSON.parse(raw);
+
+        appState.pendingScan = parsed;
+        document.getElementById('res-meal-name').innerText = parsed.mealName;
+        document.getElementById('res-sleeper-rating').innerText = `Score: ${parsed.sleeperScore}`;
+        document.getElementById('res-cals').innerText = parsed.calories;
+        document.getElementById('res-protein').innerText = `${parsed.protein}g`;
+        document.getElementById('res-carbs').innerText = `${parsed.carbs}g`;
+        document.getElementById('res-fats').innerText = `${parsed.fats}g`;
+        document.getElementById('res-verdict').innerText = parsed.verdict;
+        document.getElementById('scan-result-card').classList.remove('hidden');
+        showToast('Meal scanned!');
+      } catch (err) {
+        showToast('Scan error. Try again.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Scan with Gemini Vision';
+      }
+    }
+
+    function addScannedMealToDailyLog() {
+      if (!appState.pendingScan) return;
+      appState.meals.push({
+        id: 'm-' + Date.now(),
+        name: appState.pendingScan.mealName,
+        calories: Number(appState.pendingScan.calories) || 0,
+        protein: Number(appState.pendingScan.protein) || 0,
+        carbs: Number(appState.pendingScan.carbs) || 0,
+        fats: Number(appState.pendingScan.fats) || 0
+      });
+      document.getElementById('scan-result-card').classList.add('hidden');
+      document.getElementById('food-desc-input').value = '';
+      appState.pendingScan = null;
+      renderNutrition();
+      showToast('Added to fuel log!');
+    }
+
+    function addManualMeal() {
+      const name = document.getElementById('manual-name-input').value.trim() || 'Custom Meal';
+      const cals = Number(document.getElementById('manual-cals-input').value) || 0;
+      const pro = Number(document.getElementById('manual-pro-input').value) || 0;
+      const carb = Number(document.getElementById('manual-carb-input').value) || 0;
+      const fat = Number(document.getElementById('manual-fat-input').value) || 0;
+
+      appState.meals.push({ id: 'm-' + Date.now(), name, calories: cals, protein: pro, carbs: carb, fats: fat });
+      document.getElementById('manual-name-input').value = '';
+      document.getElementById('manual-cals-input').value = '';
+      document.getElementById('manual-pro-input').value = '';
+      document.getElementById('manual-carb-input').value = '';
+      document.getElementById('manual-fat-input').value = '';
+      renderNutrition();
+      showToast('Logged meal!');
+    }
+
+    function renderNutrition() {
+      let cals = 0, pro = 0, carb = 0, fat = 0;
+      appState.meals.forEach(m => {
+        cals += m.calories; pro += m.protein; carb += m.carbs; fat += m.fats;
+      });
+
+      const t = appState.nutritionTargets;
+      document.getElementById('stat-cals').innerText = `${cals} / ${t.calories}`;
+      document.getElementById('bar-cals').style.width = `${Math.min(100, (cals / t.calories) * 100)}%`;
+
+      document.getElementById('stat-pro').innerText = `${pro}g / ${t.protein}g`;
+      document.getElementById('bar-pro').style.width = `${Math.min(100, (pro / t.protein) * 100)}%`;
+
+      document.getElementById('stat-carb').innerText = `${carb}g / ${t.carbs}g`;
+      document.getElementById('bar-carb').style.width = `${Math.min(100, (carb / t.carbs) * 100)}%`;
+
+      document.getElementById('stat-fat').innerText = `${fat}g / ${t.fats}g`;
+      document.getElementById('bar-fat').style.width = `${Math.min(100, (fat / t.fats) * 100)}%`;
+
+      const list = document.getElementById('meals-history-list');
+      if (!list) return;
+      list.innerHTML = '';
+      appState.meals.forEach((m, idx) => {
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-2xl liquid-glass flex items-center justify-between text-xs font-orbitron';
+        item.innerHTML = `
+          <div>
+            <span class="text-white font-normal">${escapeHtml(m.name)}</span>
+            <span class="text-white/60 ml-2 font-mono text-[10px]">${m.protein}g P · ${m.calories} kcal</span>
+          </div>
+          <button onclick="removeMeal(${idx})" class="text-white/40 hover:text-white p-1">✕</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function removeMeal(index) {
+      appState.meals.splice(index, 1);
+      renderNutrition();
+    }
+
+    /* =====================================================================
+       7. AI COACH TERMINAL
+       ===================================================================== */
+    async function sendChatMessage() {
+      const input = document.getElementById('ai-user-input');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      appState.chatHistory.push({ role: 'user', text });
+      renderAIChat();
+
+      const btn = document.getElementById('ai-send-btn');
+      btn.disabled = true;
+
+      const systemPrompt = `You are ETHEREAL, an elite biomechanist and calisthenics sleeper build coach.
+User Baseline: 2 strict pull-ups, 12 slow push-ups (2s), 8 pikes, 10 diamond push-ups, 1 pistol squat.
+Targets: 140g protein, 2400 kcal.
+Current Day: Phase 1, Day ${appState.currentDayIndex}.
+Keep answers direct, razor sharp, biomechanically precise. No fluff.`;
+
+      try {
+        const formattedHistory = appState.chatHistory.map(m => ({
+          role: m.role === 'model' ? 'model' : 'user',
+          parts: [{ text: m.text }]
+        }));
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: formattedHistory,
+            systemInstruction: { parts: [{ text: systemPrompt }] }
+          })
+        });
+
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Protocol logged.';
+        appState.chatHistory.push({ role: 'model', text: reply });
+        renderAIChat();
+      } catch (e) {
+        appState.chatHistory.push({ role: 'model', text: 'Terminal unavailable. Please try again.' });
+        renderAIChat();
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function askQuickPrompt(p) {
+      document.getElementById('ai-user-input').value = p;
+      sendChatMessage();
+    }
+
+    function renderAIChat() {
+      const container = document.getElementById('ai-chat-messages');
+      if (!container) return;
+      container.innerHTML = '';
+
+      appState.chatHistory.forEach(msg => {
+        const d = document.createElement('div');
+        if (msg.role === 'user') {
+          d.className = 'flex justify-end';
+          d.innerHTML = `<div class="max-w-[80%] p-3.5 rounded-2xl liquid-glass text-white text-xs">${escapeHtml(msg.text)}</div>`;
+        } else {
+          d.className = 'flex justify-start';
+          d.innerHTML = `<div class="max-w-[85%] p-4 rounded-2xl bg-black/30 border border-white/10 text-white/90 text-xs leading-relaxed">${formatMarkdown(msg.text)}</div>`;
+        }
+        container.appendChild(d);
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function clearAIChat() {
+      appState.chatHistory = [{ role: 'model', text: 'Terminal reset. Ask any questions about your movement levers or recovery.' }];
+      renderAIChat();
+    }
+
+    /* =====================================================================
+       8. UTILITIES
+       ===================================================================== */
+    function escapeHtml(text) {
+      return String(text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function formatMarkdown(text) {
+      let s = escapeHtml(text);
+      s = s.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-orbitron font-normal">$1</strong>');
+      s = s.replace(/\n\n/g, '<br><br>');
+      s = s.replace(/\n/g, '<br>');
+      return s;
+    }
+
+    let toastTimer = null;
+    function showToast(msg, icon = '✓') {
+      const box = document.getElementById('toast-box');
+      document.getElementById('toast-message').innerText = msg;
+      document.getElementById('toast-icon').innerText = icon;
+      box.classList.remove('translate-y-20', 'opacity-0');
+      box.classList.add('translate-y-0', 'opacity-100');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        box.classList.remove('translate-y-0', 'opacity-100');
+        box.classList.add('translate-y-20', 'opacity-0');
+      }, 2600);
+    }
+
+    /* =====================================================================
+       9. INITIALIZATION
+       ===================================================================== */
+    window.onload = function() {
+      renderWorkoutView();
+      renderRadar();
+      renderCalendar();
+      renderNutrition();
+      renderAIChat();
+    };
+  </script>
+</body>
+</html>
